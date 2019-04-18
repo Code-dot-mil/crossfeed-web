@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "cablej",
+    "password": "password",
+    "database": "crossfeed",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "logging": false
+  },
+  "test": {
+    "username": "cablej",
+    "password": "password",
+    "database": "crossfeed",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "logging": false
+  },
+  "production": {
+    "username": "cablej",
+    "password": "password",
+    "database": "crossfeed",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "logging": false
+  }
+}
