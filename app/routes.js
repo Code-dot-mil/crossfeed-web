@@ -1,8 +1,12 @@
+var fs = require('fs');
 var models  = require('../models');
 var request = require("request");
 var CronJob = require('cron').CronJob;
 var Sequelize = require("sequelize");
-const op = Sequelize.Op;
+var multer = require('multer');
+var csv = require('fast-csv');
+
+var upload = multer({dest: 'tmp/csv/'});
 
 // new CronJob('0 * * * *', function() {
 // }, null, true, 'America/Chicago');
@@ -22,36 +26,123 @@ function fetchUrls(urls, callback) {
 	}
 }
 
+function formatQueryParams(body) {
+	var limit = body.count || 25;
+	var page = body.page || 1;
+	var order = [];
+
+	var sortingKeys = Object.keys(body.sorting);
+    if (sortingKeys.length > 0) {
+		order.push([sortingKeys[0], body.sorting[sortingKeys[0]]]);
+    } else {
+		order.push(['id', 'ASC']);
+	}
+
+	var where = {};
+	for (filter in body.filter) {
+		where[filter] = {$like: '%' + body.filter[filter] + '%'};
+	}
+
+	return {
+		limit: limit,
+		page: page,
+		offset: limit * (page - 1),
+		order: order,
+		where: where
+	}
+}
+
 module.exports = function(app) {
 
-	app.get('/api/domains', function(req, res) {
-		var limit = req.query.count || 50;
-		var page = req.query.page || 1;
-		var order = [];
-
-		if (req.query.orderBy && req.query.sort) {
-			order.push([req.query.orderBy, 'asc']);
-		}
-		else {
-			order.push(['id', 'ASC']);
-		}
-
-		var where = {};
-		if (req.query.filterBy && req.query.filter) {
-			where[req.query.filterBy] = {$like: '%' + req.query.filter + '%'};
-			console.log(where)
-		}
+	// Search domains
+	app.post('/api/domains/search', function(req, res) {
+		var params = formatQueryParams(req.body)
 
 		models.Domain.findAndCountAll({
-			order: order,
-	        limit: limit,
-	        offset: limit * (page - 1),
-	        where: where
+			order: params.order,
+	        limit: params.limit,
+	        offset: params.offset,
+	        where: params.where
 		}).then(function(domains) {
 			res.status(200).json(domains);
 		});
 	});
 
+
+	// Search vulnerabilities
+	app.post('/api/vulns/search', function(req, res) {
+		var params = formatQueryParams(req.body)
+
+		models.Vulnerability.findAndCountAll({
+			order: params.order,
+	        limit: params.limit,
+	        offset: params.offset,
+	        where: params.where
+		}).then(function(vulns) {
+			res.status(200).json(vulns);
+		});
+	});
+
+
+	// Import vulnerability CSV
+	app.post('/api/vulns/import', upload.single('csv'), function(req, res) {
+		var fileRows = [], fileHeader;
+
+		// open uploaded file
+		csv.fromPath(req.file.path)
+		.on("data", function (data) {
+		  fileRows.push(data); // push each row
+		})
+		.on("end", () => {
+		  fs.unlinkSync(req.file.path);   // remove temp file
+
+		  fileRows.shift(); //skip header row
+		  var items = fileRows.map((row) => {
+		  	return {
+				hackerone_id: row[1],
+				title: row[2],
+				severity: row[3],
+				state: row[5],
+				substate: row[6],
+				weakness: row[7],
+				reported_at: row[8],
+				closed_at: row[11]
+			}
+		  })
+
+		  console.log(items)
+
+		  var blacklistedSubstates = ['informative', 'duplicate', 'not-applicable', 'spam']
+		  items = items.filter(item => !blacklistedSubstates.includes(item.substate))
+
+
+		  models.Vulnerability.bulkCreate(items, {ignoreDuplicates: true}).then(() => {
+		  	return models.Vulnerability.count();
+		  }).then((count) => {
+			res.redirect('/vulns');
+		  })
+		});
+	});
+
+	// Fetch a single domain
+	app.get('/api/domains/:id', function(req, res) {
+		models.Domain.findOne({
+			where: { id: req.params.id } 
+		}).then(function(domain) {
+			res.status(200).json(domain);
+		});
+	});
+
+	// Fetch a single vuln
+	app.get('/api/vulns/:id', function(req, res) {
+		models.Vulnerability.findOne({
+			where: { id: req.params.id } 
+		}).then(function(domain) {
+			res.status(200).json(domain);
+		});
+	});
+
+	// [deprecated] Add a single domain
 	app.post('/api/domains', function(req, res) {
 		var domain = req.body.domain;
 		console.log(domain)
@@ -62,6 +153,7 @@ module.exports = function(app) {
 		});
 	});
 
+	// TODO: search full text of all HTTP responses
 	app.get('/api/domains/search', function(req, res) {
 		// Utilize Postgres full-text query
 		models.sequelize.query(`

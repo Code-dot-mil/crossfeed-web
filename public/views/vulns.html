@@ -1,0 +1,18 @@
+<div class="jumbotron"  ng-init="ctrl.type = 'vulns'; ctrl.fetchAll()">
+	<h2>Vulnerabilities</h2>
+	<table ng-table="ctrl.tableParams" class="table table-bordered table-striped table-condensed">
+	    <tr ng-repeat="vuln in $data">
+	        <td title="'Title'" sortable="'title'" filter="{title: 'text'}">
+	            {{vuln.title}}</td>
+	        <td title="'Severity'" sortable="'severity'" filter="{severity: 'select'}" filter-data="[{id: 'none', title: 'None'}, {id: 'low', title: 'Low'}, {id: 'medium', title: 'Medium'}, {id: 'high', title: 'High'}, {id: 'critical', title: 'Critical'}]">
+	            {{vuln.severity}}</td>
+	        <td title="'Reported At'" sortable="'reported_at'" filter="{reported_at: 'text'}">
+	            {{vuln.reported_at  | formatDate}}</td>
+	        <td title="'State'" sortable="'state'" filter="{state: 'select'}" filter-data="[{id: 'open', title: 'Open'}, {id: 'closed', title: 'Closed'}]">
+	            {{vuln.state}}</td>
+	        <td width="1px"><button class="btn btn-default btn-sm" ui-sref="view-vuln({id: vuln.id})"><span class="glyphicon glyphicon-search"></span></button></td>
+	    </tr>
+	</table>
+
+	<p style="font-size:11px; float:right;"><b>{{count | number}} results</b></p>
+</div>

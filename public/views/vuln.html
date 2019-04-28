@@ -1,0 +1,13 @@
+<div class="jumbotron"  ng-init="ctrl.fetch()">
+	<h2>{{ctrl.vuln.title}}</h2>
+	<p>#{{ctrl.vuln.hackerone_id}}</p>
+	<p><a href="https://hackerone.com/reports/{{ctrl.vuln.hackerone_id}}" target="_blank">Open report on HackerOne</a></p>
+
+
+	<p>State: {{ctrl.vuln.state}} ({{ctrl.vuln.substate}})</p>
+	<p>Severity: {{ctrl.vuln.severity}}</p>
+	<p>Weakness: {{ctrl.vuln.weakness}}</p>
+	<p>Reported at: {{ctrl.vuln.reported_at | date:'medium'}}</p>
+	<p>Closed at: {{ctrl.vuln.closed_at | date:'medium'}}</p>
+
+</div>

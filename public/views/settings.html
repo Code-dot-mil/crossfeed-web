@@ -1,0 +1,12 @@
+<div class="jumbotron">
+	<h2>Settings</h2>
+
+
+	<p>Upload vulnerability CSV from HackerOne export</p>
+
+	<form action="/api/vulns/import" method="post" enctype="multipart/form-data">
+	    <input type="file" name="csv" id="csv"><br>
+	    <input type="submit" value="Upload" class="btn btn-default" name="submit">
+	</form>
+
+</div>

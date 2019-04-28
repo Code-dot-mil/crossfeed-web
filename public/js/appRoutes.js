@@ -9,10 +9,28 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', '
 	      controller: 'Controller',
 	      controllerAs: 'ctrl'
 	    })
-		.state('urls', {
-	      url: '/urls',
-	      templateUrl: 'views/urls.html',
+		.state('settings', {
+	      url: '/settings',
+	      templateUrl: 'views/settings.html',
+	      controller: 'SettingsController',
+	      controllerAs: 'ctrl'
+	    })
+		.state('vulns', {
+	      url: '/vulns',
+	      templateUrl: 'views/vulns.html',
 	      controller: 'Controller',
+	      controllerAs: 'ctrl'
+	    })
+	    .state('view-domain', {
+	      url: '/domain/:id',
+	      templateUrl: 'views/domain.html',
+	      controller: 'DomainController',
+	      controllerAs: 'ctrl'
+	    })
+	    .state('view-vuln', {
+	      url: '/vuln/:id',
+	      templateUrl: 'views/vuln.html',
+	      controller: 'VulnController',
 	      controllerAs: 'ctrl'
 	    })
 

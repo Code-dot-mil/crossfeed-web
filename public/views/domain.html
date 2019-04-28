@@ -1,0 +1,18 @@
+<div class="jumbotron"  ng-init="ctrl.fetch()">
+	<h2>{{ctrl.domain.name}}</h2>
+	<p>{{ctrl.domain.ip}}</p>
+	<p><a href="{{ctrl.domain.link}}" target="_blank">Open domain in new tab</a></p>
+
+	<hr>
+
+	<p>Open ports: {{ctrl.domain.ports}}</p>
+	<a ng-if="ctrl.domain.screenshot != null" target="_blank" href="{{ctrl.domain.screenshot}}"><img src="{{ctrl.domain.screenshot}}"></a>
+
+	<br><br>
+
+	<p>wappalyzer_data: {{ctrl.domain.wappalyzer_data}}</p>
+	<p>response_data: {{ctrl.domain.response_data}}</p>
+	<p>Created: {{ctrl.domain.createdAt | date:'medium'}}</p>
+	<p>Updated: {{ctrl.domain.updatedAt | date:'medium'}}</p>
+
+</div>

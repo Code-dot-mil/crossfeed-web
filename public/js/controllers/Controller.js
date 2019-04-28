@@ -5,21 +5,39 @@ angular.module('Controller', []).controller('Controller', function($scope, $stat
 
 	this.searchString = '';
 
+	this.type = 'domains'; // Default to domains search
+
 
 	this.fetchAll = () => {
-		this.tableParams = new NgTableParams({
+		var tableParams = {
 		 	page: 1, // show first page
 		    count: 25 // count per page
-		}, {
-			getData: this.getData
+		};
+        var savedState = localStorage.getItem('tableParams-' + this.type);
+        if (savedState) {
+            tableParams = JSON.parse(savedState);
+        }
+
+		this.tableParams = new NgTableParams(tableParams, {
+			filterDelay: 1000,
+			getData: this.search
 		});
+
 	}
 
-	this.getData = function(params) {
-		return Domain.fetch(params.url(), params.sorting(), params.filter())
+	this.search = (params) => {
+		var queryParams = {
+	      page: params.url().page,
+	      count: params.url().count,
+	      sorting: params.sorting(),
+	      filter: params.filter()
+	    }
+        localStorage.setItem('tableParams-' + this.type, JSON.stringify({count: params.url().count}));
+		return Domain.fetch(this.type, queryParams)
 			.then(response => {
 				params.total(response.data.count);
 				var domains = response.data.rows;
+				$scope.count = response.data.count;
 				return domains;
 			})
 			.catch((error) => {
@@ -40,18 +58,10 @@ angular.module('Controller', []).controller('Controller', function($scope, $stat
 		  });
 	}
 
-	this.search = function() {
-		this.loading = true;
-		Domain.search(this.searchString)
-		  .then(response => {
-		  	this.urls = response.data;
-		  	this.loading = false;
-		  	console.log(this.urls)
-		  })
-		  .catch((error) => {
-		  	this.loading = false;
-		    console.log(error)
-		  });
+	this.clear = function() {
+		this.tableParams.filter({});
+		this.tableParams.sorting({});
+		this.tableParams.url({});
 	}
 
 	this.delete = function(id) {
@@ -66,8 +76,8 @@ angular.module('Controller', []).controller('Controller', function($scope, $stat
 
 })
 
-.filter('to_trusted', ['$sce', function($sce){
-        return function(text) {
-            return $sce.trustAsHtml(text);
+.filter('formatDate', () => {
+        return function(value) {
+        	return value.split(' ')[0];
         };
-    }]);
+    });

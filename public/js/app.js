@@ -4,6 +4,9 @@ angular.module('app',
 		'ui.router',
 		'appRoutes',
 		'Controller',
+		'DomainController',
+		'VulnController',
+		'SettingsController',
 		'Domain',
 		'ngTable'
 	])
