@@ -33,6 +33,12 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', '
 	      controller: 'VulnController',
 	      controllerAs: 'ctrl'
 	    })
+	    .state('dashboard', {
+	      url: '/dashboard',
+	      templateUrl: 'views/dashboard.html',
+	      controller: 'Controller',
+	      controllerAs: 'ctrl'
+	    })
 
 	$locationProvider.html5Mode(true);
 

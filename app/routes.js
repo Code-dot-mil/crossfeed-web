@@ -1,12 +1,10 @@
-var fs = require('fs');
 var models  = require('../models');
 var request = require("request");
 var CronJob = require('cron').CronJob;
 var Sequelize = require("sequelize");
-var multer = require('multer');
-var csv = require('fast-csv');
 
-var upload = multer({dest: 'tmp/csv/'});
+var bd_api = require('./bd_api.js');
+var h1_api = require('./h1_api.js');
 
 // new CronJob('0 * * * *', function() {
 // }, null, true, 'America/Chicago');
@@ -54,6 +52,9 @@ function formatQueryParams(body) {
 
 module.exports = function(app) {
 
+	app.use('/api/bd', bd_api);
+	app.use('/api/h1', h1_api);
+
 	// Search domains
 	app.post('/api/domains/search', function(req, res) {
 		var params = formatQueryParams(req.body)
@@ -80,47 +81,6 @@ module.exports = function(app) {
 	        where: params.where
 		}).then(function(vulns) {
 			res.status(200).json(vulns);
-		});
-	});
-
-
-	// Import vulnerability CSV
-	app.post('/api/vulns/import', upload.single('csv'), function(req, res) {
-		var fileRows = [], fileHeader;
-
-		// open uploaded file
-		csv.fromPath(req.file.path)
-		.on("data", function (data) {
-		  fileRows.push(data); // push each row
-		})
-		.on("end", () => {
-		  fs.unlinkSync(req.file.path);   // remove temp file
-
-		  fileRows.shift(); //skip header row
-		  var items = fileRows.map((row) => {
-		  	return {
-				hackerone_id: row[1],
-				title: row[2],
-				severity: row[3],
-				state: row[5],
-				substate: row[6],
-				weakness: row[7],
-				reported_at: row[8],
-				closed_at: row[11]
-			}
-		  })
-
-		  console.log(items)
-
-		  var blacklistedSubstates = ['informative', 'duplicate', 'not-applicable', 'spam']
-		  items = items.filter(item => !blacklistedSubstates.includes(item.substate))
-
-
-		  models.Vulnerability.bulkCreate(items, {ignoreDuplicates: true}).then(() => {
-		  	return models.Vulnerability.count();
-		  }).then((count) => {
-			res.redirect('/vulns');
-		  })
 		});
 	});
 

@@ -8,5 +8,6 @@ angular.module('app',
 		'VulnController',
 		'SettingsController',
 		'Domain',
+		'Integration',
 		'ngTable'
 	])

@@ -1,12 +1,41 @@
 <div class="jumbotron">
 	<h2>Settings</h2>
 
+	<hr>
 
-	<p>Upload vulnerability CSV from HackerOne export</p>
+	<h3>HackerOne Integration</h3>
+	<ol style="font-size: 16px;">
+		<li>Visit HackerOne and <a href="https://hackerone.com/deptofdefense/export_reports" target="_blank">export reports</a> via email.</li>
+		<li>Upload the vulnerability CSV here:</li><br>
 
-	<form action="/api/vulns/import" method="post" enctype="multipart/form-data">
-	    <input type="file" name="csv" id="csv"><br>
-	    <input type="submit" value="Upload" class="btn btn-default" name="submit">
-	</form>
+		<form action="/api/h1/importCsv" method="post" enctype="multipart/form-data">
+		    <input type="file" name="csv" id="csv"><br>
+		    <input type="submit" value="Upload" class="btn btn-default" name="submit">
+		</form><br>
+		<li>View uploaded reports at the <a ui-sref="vulns">vulnerabilities</a> tab.</li> 
+		<li>Fetch report contents:</li><br>
+		<form class="simple-form">
+			<div class="form-group">
+				<label>HackerOne cookie: <input class="form-control" type="text" ng-model="ctrl.h1cookie" /></label><br />
+				<input type="submit" ng-click="ctrl.importH1Contents()" value="Import Reports" class="btn btn-default"  />
+			</div>
+		</form>
+	</ol>
+
+	<hr>
+
+	<h3>BitDiscovery Integration</h3>
+	<input type="submit" value="Load Source List" class="btn btn-default" name="submit" ng-click="ctrl.loadBDSources()">
+	<table ng-if="ctrl.bdsources" class="table table-bordered table-striped table-condensed"><br><br>
+		<tr>
+			<th>Source name</th><th>Results count</th><th>Date created</th><th>Import subdomains</th>
+		</tr>
+		<tr ng-repeat="source in ctrl.bdsources">
+			<td>{{source.keyword}}</td>
+			<td>{{source.results_count}}</td>
+			<td>{{source.created_at | date}}</td>
+			<td style="width:1px"><button class="btn btn-default btn-sm" ng-click="ctrl.importBD(source.id)"><span class="glyphicon glyphicon-plus"></span></button></td>
+		</tr>
+	</table>
 
 </div>

@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     ip: DataTypes.STRING,
     ports: DataTypes.STRING,
     screenshot: DataTypes.STRING,
-    wappalyzer_data: DataTypes.STRING,
+    services: DataTypes.STRING,
     response_data: DataTypes.STRING
   }, {});
   Domain.associate = function(models) {
