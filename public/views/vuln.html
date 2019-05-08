@@ -11,8 +11,6 @@
 	<p>Closed at: {{ctrl.vuln.closed_at | date:'medium'}}</p>
 
 	<p>Contents:</p>
-	<div>
-		{{ctrl.vuln.contents}}
-	</div>
+	<div style="white-space: pre-wrap;">{{ctrl.vuln.contents}}</div>
 
 </div>

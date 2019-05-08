@@ -88,7 +88,7 @@ router.post('/importContents', function(req, res) {
 					callback();
 				})
 			})
-		}, 1);
+		}, 2);
 
 		q.drain = function() {
 			res.status(200).json('success.');

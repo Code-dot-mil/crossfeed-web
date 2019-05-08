@@ -4,6 +4,8 @@
 	    <tr ng-repeat="vuln in $data">
 	        <td title="'Title'" sortable="'title'" filter="{title: 'text'}">
 	            {{vuln.title}}</td>
+	        <td title="'Domains'" sortable="'domains'" filter="{domains: 'text'}">
+	            {{vuln.domains | limitTo: 25}}{{vuln.domains.length > 25 ? '...' : ''}}</td>
 	        <td title="'Severity'" sortable="'severity'" filter="{severity: 'select'}" filter-data="[{id: 'none', title: 'None'}, {id: 'low', title: 'Low'}, {id: 'medium', title: 'Medium'}, {id: 'high', title: 'High'}, {id: 'critical', title: 'Critical'}]">
 	            {{vuln.severity}}</td>
 	        <td title="'Reported At'" sortable="'reported_at'" filter="{reported_at: 'text'}">

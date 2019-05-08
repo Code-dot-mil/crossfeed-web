@@ -6,23 +6,10 @@ var Sequelize = require("sequelize");
 var bd_api = require('./bd_api.js');
 var h1_api = require('./h1_api.js');
 
+var utils = require('./utils.js');
+
 // new CronJob('0 * * * *', function() {
 // }, null, true, 'America/Chicago');
-
-// Helper method to fetch a list of urls, calls callback as each response is returned
-function fetchUrls(urls, callback) {
-	for (url of urls) {
-		request.get(url, (err, res1, body) => {
-			if (!res1 || err) {
-				return;
-			}
-			var url = res1.request.uri.href;
-		    var titleArr = body.match("<title>(.*?)</title>");
-		    var title = titleArr && titleArr.length > 1 ? titleArr[1] : url;
-		    callback({ title: title, url: url, contents: body })
-		});
-	}
-}
 
 function formatQueryParams(body) {
 	var limit = body.count || 25;
@@ -54,6 +41,35 @@ module.exports = function(app) {
 
 	app.use('/api/bd', bd_api);
 	app.use('/api/h1', h1_api);
+
+	app.get('/api/vulns/categorize', function(req, res) {
+		models.Vulnerability.findAll().then(function(vulns) {
+			for (vuln of vulns) {
+				var domains = utils.findDomains(vuln.contents);
+				vuln.updateAttributes({ 'domains': domains.join(',')})
+			}
+			res.status(200).json({});
+		});
+	})
+
+	app.get('/api/vulns/associate', function(req, res) {
+		models.Vulnerability.findAll().then(function(vulns) {
+			/*for (vuln of vulns) {
+				console.log(vuln.domains)
+				var domainsArr = vuln.domains.split(',')
+				for (domain of domainsArr) {
+					console.log(domain)
+					models.Domain.findOne({ where: { name: domain } }).then((result) => {
+						if (result) {
+							console.log(result.id)
+
+						}
+					})
+				}
+			}
+			res.status(200).json({});*/
+		});
+	})
 
 	// Search domains
 	app.post('/api/domains/search', function(req, res) {
@@ -97,8 +113,8 @@ module.exports = function(app) {
 	app.get('/api/vulns/:id', function(req, res) {
 		models.Vulnerability.findOne({
 			where: { id: req.params.id } 
-		}).then(function(domain) {
-			res.status(200).json(domain);
+		}).then(function(vuln) {
+			res.status(200).json(vuln);
 		});
 	});
 
