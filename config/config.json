@@ -1,25 +1,25 @@
 {
   "development": {
-    "username": "cablej",
-    "password": "password",
+    "username": "crossfeed",
+    "password": "xcWpABy4C)QrX#tRF;Q4NkLaNwa;2LEmx83kKBZUvgaCbiot26U3QB24FzvFvKd&",
     "database": "crossfeed",
-    "host": "127.0.0.1",
+    "host": "cfdb.c1s0w0m3arvu.us-east-2.rds.amazonaws.com",
     "dialect": "postgres",
     "logging": false
   },
   "test": {
-    "username": "cablej",
-    "password": "password",
+    "username": "crossfeed",
+    "password": "xcWpABy4C)QrX#tRF;Q4NkLaNwa;2LEmx83kKBZUvgaCbiot26U3QB24FzvFvKd&",
     "database": "crossfeed",
-    "host": "127.0.0.1",
+    "host": "cfdb.c1s0w0m3arvu.us-east-2.rds.amazonaws.com",
     "dialect": "postgres",
     "logging": false
   },
   "production": {
-    "username": "cablej",
-    "password": "password",
+    "username": "crossfeed",
+    "password": "xcWpABy4C)QrX#tRF;Q4NkLaNwa;2LEmx83kKBZUvgaCbiot26U3QB24FzvFvKd&",
     "database": "crossfeed",
-    "host": "127.0.0.1",
+    "host": "cfdb.c1s0w0m3arvu.us-east-2.rds.amazonaws.com",
     "dialect": "postgres",
     "logging": false
   }

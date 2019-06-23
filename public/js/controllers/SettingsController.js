@@ -1,4 +1,4 @@
-angular.module('SettingsController', []).controller('SettingsController', function($scope, $state, $stateParams, $window, Integration, NgTableParams) {
+angular.module('SettingsController', []).controller('SettingsController', function($scope, $state, $stateParams, $window, Integration, NgTableParams, toaster) {
 
 	this.loadBDSources = function() {
 		Integration.fetchBDSources()
@@ -13,7 +13,7 @@ angular.module('SettingsController', []).controller('SettingsController', functi
 	this.importBD = function(id) {
 		Integration.importBDSource(id)
 		.then(response => {
-		  	console.log(response)
+			toaster.pop('success', "Success", response.data.status);
 		})
 		.catch((error) => {
 		  console.log(error)

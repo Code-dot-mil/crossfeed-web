@@ -2,6 +2,7 @@
   "name": "starter-node-angular",
   "main": "server.js",
   "dependencies": {
+    "angular-toastr": "^2.1.1",
     "async": "^2.6.2",
     "body-parser": "^1.17.2",
     "cron": "^1.6.0",

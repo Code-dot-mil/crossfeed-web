@@ -9,5 +9,6 @@ angular.module('app',
 		'SettingsController',
 		'Domain',
 		'Integration',
-		'ngTable'
+		'ngTable',
+		'toaster'
 	])
