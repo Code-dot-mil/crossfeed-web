@@ -1,10 +1,12 @@
 var models  = require('../models');
-var request = require("request");
+var request = require('request');
 var CronJob = require('cron').CronJob;
-var Sequelize = require("sequelize");
+var Sequelize = require('sequelize');
 
 var bd_api = require('./bd_api.js');
 var h1_api = require('./h1_api.js');
+
+var scans = require('./scans.js');
 
 var utils = require('./utils.js');
 
@@ -25,6 +27,28 @@ function formatQueryParams(body) {
 
 	var where = {};
 	for (filter in body.filter) {
+		if (filter == 'ports' && body.filter[filter] == '80,443') {
+			where['$or'] = [
+				{
+					ports: {$like: '%80%'}
+				},
+				{
+					ports: {$like: '%443%'}
+				}
+			];
+			continue
+		}
+		if (filter == 'ports' && body.filter[filter] == 'not_null') {
+			where['$and'] = [
+				{
+					ports: {[Sequelize.Op.ne]: null}
+				},
+				{
+					ports: {[Sequelize.Op.ne]: ''}
+				}
+			];
+			continue
+		}
 		where[filter] = {$like: '%' + body.filter[filter] + '%'};
 	}
 
@@ -41,6 +65,8 @@ module.exports = function(app) {
 
 	app.use('/api/bd', bd_api);
 	app.use('/api/h1', h1_api);
+
+	app.use('/api/scans', scans);
 
 	app.get('/api/vulns/categorize', function(req, res) {
 		models.Vulnerability.findAll().then(function(vulns) {

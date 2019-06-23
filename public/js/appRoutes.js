@@ -15,6 +15,18 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', '
 	      controller: 'SettingsController',
 	      controllerAs: 'ctrl'
 	    })
+	    .state('scans', {
+	      url: '/scans',
+	      templateUrl: 'views/scans.html',
+	      controller: 'ScansController',
+	      controllerAs: 'ctrl'
+	    })
+	    .state('logs', {
+	      url: '/logs',
+	      templateUrl: 'views/logs.html',
+	      controller: 'ScansController',
+	      controllerAs: 'ctrl'
+	    })
 		.state('vulns', {
 	      url: '/vulns',
 	      templateUrl: 'views/vulns.html',
