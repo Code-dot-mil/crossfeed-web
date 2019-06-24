@@ -4,8 +4,10 @@
   "dependencies": {
     "angular-toastr": "^2.1.1",
     "async": "^2.6.2",
+    "beanstalkd-worker": "^1.1.0",
     "body-parser": "^1.17.2",
     "cron": "^1.6.0",
+    "crontab": "^1.2.0",
     "dotenv": "^7.0.0",
     "express": "^4.15.3",
     "express-basic-auth": "^1.2.0",
@@ -20,6 +22,7 @@
     "pg-hstore": "^2.3.2",
     "read-last-lines": "^1.7.1",
     "request": "^2.88.0",
-    "sequelize": "^4.42.0"
+    "sequelize": "^4.42.0",
+    "shell-escape": "^0.2.0"
   }
 }

@@ -31,3 +31,7 @@ td {
 	outline: none;
 	text-indent: 40px;
 }
+
+.mono {
+	font-family: monospace;
+}

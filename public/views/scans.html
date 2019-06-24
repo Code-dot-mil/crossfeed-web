@@ -1,41 +1,50 @@
-<div class="jumbotron">
-	<h2>Run Scan</h2>
+<div class="jumbotron" ng-init="ctrl.getConfig()">
+	<h2>Configure Scans</h2>
 
 	<hr>
 
-	<h3>HackerOne Integration</h3>
-	<ol style="font-size: 16px;">
-		<li>Visit HackerOne and <a href="https://hackerone.com/deptofdefense/export_reports" target="_blank">export reports</a> via email.</li>
-		<li>Upload the vulnerability CSV here:</li><br>
+	<h3>Automatic Scans</h3>
+	<p>The following scans are configured to run automatically</p>
 
-		<form action="/api/h1/importCsv" method="post" enctype="multipart/form-data">
-		    <input type="file" name="csv" id="csv"><br>
-		    <input type="submit" value="Upload" class="btn btn-default" name="submit">
-		</form><br>
-		<li>View uploaded reports at the <a ui-sref="vulns">vulnerabilities</a> tab.</li> 
-		<li>Fetch report contents:</li><br>
-		<form class="simple-form">
-			<div class="form-group">
-				<label>HackerOne cookie: <input class="form-control" type="text" ng-model="ctrl.h1cookie" /></label><br />
-				<input type="submit" ng-click="ctrl.importH1Contents()" value="Import Reports" class="btn btn-default"  />
-			</div>
-		</form>
-	</ol>
-
-	<hr>
-
-	<h3>BitDiscovery Integration</h3>
-	<input type="submit" value="Load Source List" class="btn btn-default" name="submit" ng-click="ctrl.loadBDSources()">
-	<table ng-if="ctrl.bdsources" class="table table-bordered table-striped table-condensed"><br><br>
+	<table class="table table-bordered table-striped table-condensed">
 		<tr>
-			<th>Source name</th><th>Results count</th><th>Date created</th><th>Import subdomains</th>
+			<th>Scan Frequency</th><th>Command</th><th></th>
 		</tr>
-		<tr ng-repeat="source in ctrl.bdsources">
-			<td>{{source.keyword}}</td>
-			<td>{{source.results_count}}</td>
-			<td>{{source.created_at | date}}</td>
-			<td style="width:1px"><button class="btn btn-default btn-sm" ng-click="ctrl.importBD(source.id)"><span class="glyphicon glyphicon-plus"></span></button></td>
+		<tr ng-repeat="job in ctrl.jobs">
+			<td><code>{{job.freq}}</code></td>
+			<td><code>{{job.command}}</code></td>
+			<td style="width:1px"><button class="btn btn-default btn-sm" ng-click="ctrl.removeCron(job.index)"><span class="glyphicon glyphicon-remove"></span></button></td>
 		</tr>
 	</table>
+
+	<h4>Schedule Scan</h4>
+	<form class="simple-form">
+		<div class="form-group form-inline">
+			<label>Run the command
+			<select ng-model="ctrl.commandType">
+			  <option value="fetchHosts">fetchHosts</option>
+			  <option value="scanPorts">scanPorts</option>
+			</select> with args
+			 <input class="form-control" type="text" ng-model="ctrl.commandArgs" style="width:150px !important; height:23px!important;"> every <input class="form-control" type="number" ng-model="ctrl.freq" style="width:75px !important; height:23px!important;"></label>
+			<select ng-model="ctrl.frequnit">
+			  <option value="minutes">minutes</option>
+			  <option value="hours">hours</option>
+			  <option value="days">days</option>
+			  <option value="months">month</option>
+			</select></label>
+			<br><br>
+			<input type="submit" ng-click="ctrl.scheduleCron()" value="Schedule" class="btn btn-default"  />
+		</div>
+	</form>
+
+	<hr>
+
+	<h3>Run Manual Scan</h3>
+	<p>Runs a passive port scan using Rapid7's Project Sonar data.</p>
+	<form class="simple-form">
+		<div class="form-group">
+			<input type="submit" ng-click="ctrl.initPortScan()" value="Run Port Scan" class="btn btn-default"  />
+		</div>
+	</form>
 
 </div>
