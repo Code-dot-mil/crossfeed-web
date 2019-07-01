@@ -15,7 +15,7 @@
 	            {{domain.name}}</td>
 	        <td title="'IP'" sortable="'ip'" filter="{ip: 'text'}">
 	            {{domain.ip}}</td>
-	        <td title="'Ports'" sortable="'ports'" filter="{ports: 'text'}">
+	        <td title="'Ports'" sortable="'ports'" filter="{ports: 'select'}" filter-data="[{id: 'not_null', title: 'Any'}, {id: '80,443', title: '80 or 443'}, {id: '80', title: '80'}, {id: '443', title: '443'}]" style="width:10px">
 	            {{domain.ports}}</td>
 	        <td width="1px"><button class="btn btn-default btn-sm" ui-sref="view-domain({id: domain.id})"><span class="glyphicon glyphicon-search"></span></button></td>
 	    </tr>

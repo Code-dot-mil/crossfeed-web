@@ -14,7 +14,7 @@ const worker = new BeanstalkdWorker(
   process.env.BEANSTALK_PORT,
 );
 
-const validCommands = ['scanPorts', 'fetchHosts']
+const validCommands = ['scanPorts', 'fetchHosts', 'subjack']
 
 function renderJobs(jobs) {
 	var arr = []
@@ -32,6 +32,14 @@ function renderJob(job) {
 		index: i
 	}
 	return json
+}
+
+function loadCrontab(callback) {
+	if (process.env.CRONTAB_USER) {
+		crontab.load(process.env.CRONTAB_USER, callback)
+	} else {
+		crontab.load(callback)
+	}
 }
 
 router.get('/logs', function(req, res) {
@@ -65,19 +73,19 @@ router.post('/enqueue', function(req, res) {
 })
 
 router.get('/configure', function(req, res) {
-	crontab.load(function(err, crontab) {
+	loadCrontab(function(err, crontab) {
 		var jobs = crontab.jobs();
 		res.status(200).json({jobs: renderJobs(jobs)})
 	})
 })
 
 router.post('/configure', function(req, res) {
-	crontab.load(function(err, crontab) {
+	loadCrontab(function(err, crontab) {
 		if (!req.body.commandType || !validCommands.includes(req.body.commandType) || !req.body.commandArgs == null || !req.body.freq || !req.body.frequnit) {
 			console.log(req.body)
 			return res.status(422).json({error: 'Invalid command'})
 		}
-		var command = `cd ${process.env.AGENT_DIR}crossfeed-agent; ./crossfeed-agent enqueue `
+		var command = `cd ${process.env.AGENT_DIR}; ./crossfeed-agent enqueue `
 		var args = [req.body.commandType].concat(req.body.commandArgs.split(' '))
 		var escaped = shellescape(args)
 		var job = crontab.create(command + escaped)
@@ -124,7 +132,7 @@ router.post('/configure', function(req, res) {
 })
 
 router.post('/remove', function(req, res) {
-	crontab.load(function(err, crontab) {
+	loadCrontab(function(err, crontab) {
 		var jobs = crontab.jobs();
 		if (req.body.index < 0 || req.body.index > jobs.length) {
 			return res.status(422).json({error: 'Invalid index.'})
