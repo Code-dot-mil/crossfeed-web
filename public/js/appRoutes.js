@@ -48,7 +48,7 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', '
 	    .state('dashboard', {
 	      url: '/dashboard',
 	      templateUrl: 'views/dashboard.html',
-	      controller: 'Controller',
+	      controller: 'DashboardController',
 	      controllerAs: 'ctrl'
 	    })
 

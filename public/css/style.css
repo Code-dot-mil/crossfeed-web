@@ -35,3 +35,12 @@ td {
 .mono {
 	font-family: monospace;
 }
+
+.chart-med {
+	height: 330px;
+	width:330px;
+}
+
+.chart-med h4 {
+	text-align: center;
+}

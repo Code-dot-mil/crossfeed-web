@@ -1,0 +1,34 @@
+<div class="jumbotron"  ng-init="ctrl.fetchAll()">
+	<h2>Risk Dashboard</h2>
+	<p>{{ctrl.stats.total}} reports | {{ctrl.stats.numOpen}} open</p><br>
+	<div style="display: flex;">
+		<div class="chart-med">
+			<h4>Reports over time</h4>
+			<canvas class="chart chart-line" chart-data="ctrl.charts.monthly.data" chart-labels="ctrl.charts.monthly.labels" chart-options="ctrl.charts.monthly.options" chart-series="ctrl.charts.monthly.series">
+			</canvas>
+		</div>
+		<div class="chart-med" style="margin-left:10px">
+			<h4>Severity breakdown</h4>
+			<canvas class="chart chart-doughnut" chart-data="ctrl.charts.severities.data" chart-labels="ctrl.charts.severities.labels" chart-options="ctrl.globalChartOptionsLegend" chart-colors="ctrl.charts.severities.colors">
+			</canvas> 
+		</div>
+		<div style="margin-left:-10px; width: 600px;">
+			<h4>Top weaknesses</h4>
+			<canvas class="chart chart-horizontal-bar" chart-data="ctrl.charts.weaknesses.data" chart-labels="ctrl.charts.weaknesses.labels" chart-options="ctrl.charts.weaknesses.options">
+			</canvas>
+		</div>
+	</div><br><br><br>
+	<div style="display: flex;"> 
+		<div class="chart-med">
+			<h4>Top reported domains</h4>
+			<canvas class="chart chart-bar" chart-data="ctrl.charts.topDomains.data" chart-labels="ctrl.charts.topDomains.labels" chart-options="ctrl.charts.topDomains.options">
+			</canvas>
+		</div>
+		<div class="chart-med">
+			<h4>High/critical outstanding reports by domain</h4>
+			<canvas class="chart chart-bar" chart-data="ctrl.charts.topDomainsHigh.data" chart-labels="ctrl.charts.topDomainsHigh.labels" chart-options="ctrl.charts.topDomainsHigh.options">
+			</canvas>
+		</div>
+	</div>
+
+</div>

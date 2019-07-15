@@ -7,10 +7,12 @@ angular.module('app',
 		'DomainController',
 		'VulnController',
 		'SettingsController',
+		'DashboardController',
 		'ScansController',
 		'Domain',
 		'Integration',
 		'ngTable',
 		'toaster',
-		'Scans'
+		'Scans',
+		'chart.js'
 	])

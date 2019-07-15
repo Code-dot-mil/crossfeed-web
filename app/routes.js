@@ -105,7 +105,8 @@ module.exports = function(app) {
 			order: params.order,
 	        limit: params.limit,
 	        offset: params.offset,
-	        where: params.where
+	        where: params.where,
+	        attributes: ['name', 'ip', 'ports']
 		}).then(function(domains) {
 			res.status(200).json(domains);
 		});
@@ -114,13 +115,19 @@ module.exports = function(app) {
 
 	// Search vulnerabilities
 	app.post('/api/vulns/search', function(req, res) {
+		if (Object.entries(req.body).length === 0) {
+			return models.Vulnerability.findAll({attributes: { exclude: ['contents'] }}).then(function(vulns) {
+				res.status(200).json(vulns);
+			});
+		}
 		var params = formatQueryParams(req.body)
 
 		models.Vulnerability.findAndCountAll({
 			order: params.order,
 	        limit: params.limit,
 	        offset: params.offset,
-	        where: params.where
+	        where: params.where,
+	        attributes: { exclude: ['contents'] }
 		}).then(function(vulns) {
 			res.status(200).json(vulns);
 		});
