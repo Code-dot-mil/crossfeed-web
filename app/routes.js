@@ -10,9 +10,8 @@ var scans = require('./scans.js');
 
 var utils = require('./utils.js');
 
-// new CronJob('0 * * * *', function() {
-// }, null, true, 'America/Chicago');
 
+// Helper function to format query parameters, i.e. limit, page, order
 function formatQueryParams(body) {
 	var limit = body.count || 25;
 	var page = body.page || 1;
@@ -106,7 +105,7 @@ module.exports = function(app) {
 	        limit: params.limit,
 	        offset: params.offset,
 	        where: params.where,
-	        attributes: ['name', 'ip', 'ports']
+	        attributes: ['name', 'ip', 'ports', 'id', 'services']
 		}).then(function(domains) {
 			res.status(200).json(domains);
 		});

@@ -1,5 +1,6 @@
 // modules =================================================
 var express        = require('express');
+var https = require('https')
 var app            = express();
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
@@ -23,11 +24,20 @@ app.all("*", (req, res, next) => {
 	next();
 });
 
-// routes ==================================================
+
 require('./app/routes')(app); // pass our application into our routes
 
-// start app ===============================================
-app.listen(3000, () => {
-  console.log('Express server listening on port %d.', 3000);
-});
-exports = module.exports = app; 						// expose app
+if (process.env.ENVIRONMENT == 'production') {
+	https.createServer({
+	  key: fs.readFileSync('/etc/ssl/private/server.key'),
+	  cert: fs.readFileSync('/etc/ssl/certs/server.crt')
+	}, app).listen(443, () => {
+  		console.log('Express server listening on port %d.', 443);
+	})
+} else {
+	app.listen(3000, () => {
+  		console.log('Express server listening on port %d.', 3000);
+	});
+}
+
+exports = module.exports = app;
