@@ -1,0 +1,85 @@
+{
+  "_from": "angular-simple-autocomplete-directive",
+  "_id": "angular-simple-autocomplete-directive@1.1.1",
+  "_inBundle": false,
+  "_integrity": "sha1-jsFI2188O/dI5t669tvL/Xj1n2g=",
+  "_location": "/angular-simple-autocomplete-directive",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "angular-simple-autocomplete-directive",
+    "name": "angular-simple-autocomplete-directive",
+    "escapedName": "angular-simple-autocomplete-directive",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-simple-autocomplete-directive/-/angular-simple-autocomplete-directive-1.1.1.tgz",
+  "_shasum": "8ec148db5f3c3bf748e6debaf6dbcbfd78f59f68",
+  "_spec": "angular-simple-autocomplete-directive",
+  "_where": "/Users/cablej/Documents/crossfeed-web",
+  "author": {
+    "name": "Alex Neamtu",
+    "email": "alexneamtu@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/alexneamtu/angular-simple-autocomplete-directive/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "angular": "^1.5.9"
+  },
+  "deprecated": false,
+  "description": "Simple AngularJS autocomplete directive",
+  "devDependencies": {
+    "angular-mocks": "^1.5.9",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.8",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2016": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "css-loader": "^0.26.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "html-loader": "^0.4.4",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "node-sass": "^3.13.0",
+    "sass-loader": "^4.0.2",
+    "webpack": "^1.13.3"
+  },
+  "homepage": "https://github.com/alexneamtu/angular-simple-autocomplete-directive#readme",
+  "keywords": [
+    "node-module",
+    "es6",
+    "webpack",
+    "babel",
+    "angular",
+    "autocomplete",
+    "directive"
+  ],
+  "license": "MIT",
+  "main": "dist/main.js",
+  "name": "angular-simple-autocomplete-directive",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexneamtu/angular-simple-autocomplete-directive.git"
+  },
+  "scripts": {
+    "build": "webpack -p",
+    "prepublish": "npm run build && npm run test",
+    "start": "npm run build && webpack -w",
+    "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS"
+  },
+  "version": "1.1.1"
+}

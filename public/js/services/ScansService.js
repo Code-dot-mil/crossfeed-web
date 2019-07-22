@@ -8,8 +8,8 @@ angular.module('Scans', []).service('Scans', ['$http', function($http) {
     return $http.get('/api/scans/configure');
   }
 
-  this.enqueueJob = function(command) {
-    return $http.post('/api/scans/enqueue', {command: command});
+  this.enqueueJob = function(command, args) {
+    return $http.post('/api/scans/enqueue', {command: command, args: args});
   }
 
   this.scheduleCron = function(args) {

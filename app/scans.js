@@ -14,7 +14,7 @@ const worker = new BeanstalkdWorker(
   process.env.BEANSTALK_PORT,
 );
 
-const validCommands = ['scanPorts', 'fetchHosts', 'subjack']
+const validCommands = ['scan-ports', 'scan-hosts', 'subjack']
 
 function renderJobs(jobs) {
 	var arr = []
@@ -57,6 +57,9 @@ router.post('/enqueue', function(req, res) {
 	var command = req.body.command
 	if (!validCommands.includes(command)) {
 		return res.status(422).json({error: 'Invalid command'});
+	}
+	if (req.body.args && req.body.args.length > 0) {
+		command += " " + req.body.args.join(" ")
 	}
 	worker.spawn('default', command, {
 	  delay: 0,

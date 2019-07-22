@@ -22,8 +22,8 @@
 		<div class="form-group form-inline">
 			<label>Run the command
 			<select ng-model="ctrl.commandType">
-			  <option value="fetchHosts">fetchHosts</option>
-			  <option value="scanPorts">scanPorts</option>
+			  <option value="fetch-hosts">scan-hosts</option>
+			  <option value="scan-ports">scan-ports</option>
 			  <option value="subjack">subjack</option>
 			</select> with args
 			 <input class="form-control" type="text" ng-model="ctrl.commandArgs" style="width:150px !important; height:23px!important;"> every <input class="form-control" type="number" ng-model="ctrl.freq" style="width:75px !important; height:23px!important;"></label>
@@ -41,10 +41,22 @@
 	<hr>
 
 	<h3>Run Manual Scan</h3>
+
 	<p>Runs a passive port scan using Rapid7's Project Sonar data.</p>
 	<form class="simple-form">
-		<div class="form-group">
+		<div class="form-group form-inline">
+			<label>Port: &nbsp;</label><input class="form-control" type="number" ng-model="ctrl.port" placeholder="443">
 			<input type="submit" ng-click="ctrl.initPortScan()" value="Run Port Scan" class="btn btn-default"  />
+		</div>
+	</form>
+
+	<hr>
+
+	<p>Fetches given path(s) for every live host</p>
+	<form class="simple-form">
+		<div class="form-group form-inline">
+			<label>Path: &nbsp;</label><input class="form-control" type="text" ng-model="ctrl.path" placeholder="/">
+			<input type="submit" ng-click="ctrl.initHostScan()" value="Run Host Scan" class="btn btn-default"  />
 		</div>
 	</form>
 

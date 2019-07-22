@@ -14,5 +14,6 @@ angular.module('app',
 		'ngTable',
 		'toaster',
 		'Scans',
-		'chart.js'
+		'chart.js',
+		'ui.bootstrap'
 	])

@@ -20,7 +20,17 @@ angular.module('ScansController', []).controller('ScansController', function($sc
 	}
 
 	this.initPortScan = function() {
-		Scans.enqueueJob('scanPorts')
+		Scans.enqueueJob('scan-ports', [this.port])
+		  .then(response => {
+		  	toaster.pop('success', "Success", response.data.status);
+		  })
+		  .catch((response) => {
+		  	toaster.pop('error', "Error", response.data.error);
+		  });
+	}
+
+	this.initHostScan = function() {
+		Scans.enqueueJob('scan-hosts', [this.path])
 		  .then(response => {
 		  	toaster.pop('success', "Success", response.data.status);
 		  })

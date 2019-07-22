@@ -1,0 +1,28 @@
+/*
+ * angular-simple-autocomplete-directive
+ * (c) 2016 Alex Neamtu
+ * License: MIT
+ */
+
+.autocomplete {
+  ul {
+    background-color: #fff;
+    border: 1px solid #efefef;
+    width: 150px;
+    padding: 0px;
+    margin-top: 0px;
+    position: absolute;
+    z-index: 1;
+    li {
+      list-style-type: none;
+      padding: 5px 10px;
+      &.selected, &:hover {
+        background-color: #efefef;
+      }
+      em {
+        background-color: #ffff00;
+        font-style: normal;
+      }
+    }
+  }
+}
