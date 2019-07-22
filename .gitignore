@@ -4,3 +4,4 @@ config/*
 tmp/*
 .DS_STORE
 */.DS_STORE
+config/config.json

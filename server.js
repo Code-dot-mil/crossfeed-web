@@ -1,6 +1,7 @@
 // modules =================================================
 var express        = require('express');
-var https = require('https')
+var https = require('https');
+var fs = require('fs');
 var app            = express();
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');

@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "crossfeed",
-    "password": "xcWpABy4C)QrX#tRF;Q4NkLaNwa;2LEmx83kKBZUvgaCbiot26U3QB24FzvFvKd&",
+    "password": "qgffE7Y4eV;jJ9jiBFE9fq4jPZp2A2Gdxt7mPgMzNw)U$Wzgk2YnYfVWDzv8bk]]",
     "database": "crossfeed",
     "host": "cfdb.c1s0w0m3arvu.us-east-2.rds.amazonaws.com",
     "dialect": "postgres",
@@ -9,7 +9,7 @@
   },
   "test": {
     "username": "crossfeed",
-    "password": "xcWpABy4C)QrX#tRF;Q4NkLaNwa;2LEmx83kKBZUvgaCbiot26U3QB24FzvFvKd&",
+    "password": "qgffE7Y4eV;jJ9jiBFE9fq4jPZp2A2Gdxt7mPgMzNw)U$Wzgk2YnYfVWDzv8bk]]",
     "database": "crossfeed",
     "host": "cfdb.c1s0w0m3arvu.us-east-2.rds.amazonaws.com",
     "dialect": "postgres",
@@ -17,7 +17,7 @@
   },
   "production": {
     "username": "crossfeed",
-    "password": "xcWpABy4C)QrX#tRF;Q4NkLaNwa;2LEmx83kKBZUvgaCbiot26U3QB24FzvFvKd&",
+    "password": "qgffE7Y4eV;jJ9jiBFE9fq4jPZp2A2Gdxt7mPgMzNw)U$Wzgk2YnYfVWDzv8bk]]",
     "database": "crossfeed",
     "host": "cfdb.c1s0w0m3arvu.us-east-2.rds.amazonaws.com",
     "dialect": "postgres",
