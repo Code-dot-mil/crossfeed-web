@@ -84,5 +84,20 @@ angular.module("ScansController", []).controller("ScansController", [
 					toaster.pop("error", "Error", error.data.error);
 				});
 		};
+
+		this.pollRunningTasks = function() {
+			this.getRunningTasks();
+			setInterval(this.getRunningTasks, 5000);
+		};
+
+		this.getRunningTasks = function() {
+			Scans.getTasksWithStatus("running")
+				.then(response => {
+					$scope.tasks = response.data;
+				})
+				.catch(error => {
+					toaster.pop("error", "Error", error.data.error);
+				});
+		};
 	}
 ]);

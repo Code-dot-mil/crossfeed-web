@@ -149,6 +149,15 @@ module.exports = function(app) {
 		});
 	});
 
+	// Get the status of all tasks
+	app.get("/api/tasks/running", function(req, res) {
+		models.TaskStatus.findAll({
+			where: { status: "running" }
+		}).then(function(tasks) {
+			res.status(200).json(tasks);
+		});
+	});
+
 	// [deprecated] Add a single domain
 	app.post("/api/domains", function(req, res) {
 		var domain = req.body.domain;

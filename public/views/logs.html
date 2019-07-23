@@ -1,20 +1,19 @@
-<div class="jumbotron" ng-init="ctrl.fetchLogs()">
+<div class="jumbotron" ng-init="ctrl.fetchLogs(); ctrl.pollRunningTasks();">
 	<h2>Active Scans</h2>
-	 <div class="row">
-        <div class="col-sm-4">
-			<h4>fetchHosts running with args</h4><uib-progressbar class="progress-striped" value="22" type="warning">22%</uib-progressbar>
+	<div class="row">
+		<div ng-repeat="task in tasks" class="col-sm-4">
+			<h4>{{task.command}}</h4>
+			<uib-progressbar class="progress-striped active" value="task.percentage" type="warning"
+				>{{task.percentage}}%</uib-progressbar
+			>
 		</div>
-        <div class="col-sm-4">
-			<h4>fetchHosts running with args</h4><uib-progressbar class="progress-striped" max="200" value="166" type="danger"><i>166 / 200</i></uib-progressbar>
-		</div>
-    </div>
+	</div>
 
 	<h2>Scan Logs</h2>
 
-	<hr>
+	<hr />
 
 	<h4>Displaying the 1000 most recent lines of logs.</h4>
-	<br>
+	<br />
 	<pre>{{ctrl.logs}}</pre>
-
 </div>

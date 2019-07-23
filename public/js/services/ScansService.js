@@ -9,6 +9,10 @@ angular.module("Scans", []).service("Scans", [
       return $http.get("/api/scans/configure");
     };
 
+    this.getTasksWithStatus = function(status) {
+      return $http.get("/api/tasks/" + status);
+    };
+
     this.enqueueJob = function(command, args) {
       return $http.post("/api/scans/enqueue", { command: command, args: args });
     };

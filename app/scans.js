@@ -9,10 +9,7 @@ var BeanstalkdWorker = require("beanstalkd-worker");
 var crontab = require("crontab");
 var shellescape = require("shell-escape");
 
-const worker = new BeanstalkdWorker(
-	process.env.BEANSTALK_HOST,
-	process.env.BEANSTALK_PORT
-);
+const worker = new BeanstalkdWorker(process.env.BEANSTALK_HOST, process.env.BEANSTALK_PORT);
 
 const validCommands = ["scan-ports", "scan-hosts", "subjack"];
 
@@ -45,7 +42,7 @@ function loadCrontab(callback) {
 router.get("/logs", function(req, res) {
 	path = process.env.LOG_FILE + moment(new Date()).format("YYYY-MM") + ".txt";
 	readLastLines
-		.read(path, 1000)
+		.read(path, 100)
 		.catch(function(error) {
 			res.status(500).json({ logs: "Could not find log file." });
 		})
@@ -72,9 +69,7 @@ router.post("/enqueue", function(req, res) {
 			res.status(500).json({ error: "Could not create job." });
 		})
 		.then(function(job) {
-			return res
-				.status(200)
-				.json({ status: "Successfully created job with id " + job.id });
+			return res.status(200).json({ status: "Successfully created job with id " + job.id });
 		});
 });
 
@@ -98,34 +93,26 @@ router.post("/configure", function(req, res) {
 			return res.status(422).json({ error: "Invalid command" });
 		}
 		var command = `cd ${process.env.AGENT_DIR}; ./crossfeed-agent enqueue `;
-		var args = [req.body.commandType].concat(
-			req.body.commandArgs.split(" ")
-		);
+		var args = [req.body.commandType].concat(req.body.commandArgs.split(" "));
 		var escaped = shellescape(args);
 		var job = crontab.create(command + escaped);
 		switch (req.body.frequnit) {
 			case "minutes":
 				if (req.body.freq < 1 || req.body.freq >= 60)
-					return res
-						.status(422)
-						.json({ error: "Minutes must be between 1 and 59" });
+					return res.status(422).json({ error: "Minutes must be between 1 and 59" });
 				job.minute().every(req.body.freq);
 				break;
 			case "hours":
 				job.minute().at(0);
 				if (req.body.freq < 1 || req.body.freq >= 24)
-					return res
-						.status(422)
-						.json({ error: "Hours must be between 1 and 24" });
+					return res.status(422).json({ error: "Hours must be between 1 and 24" });
 				if (req.body.freq > 1) job.hour().every(req.body.freq);
 				break;
 			case "days":
 				job.minute().at(0);
 				job.hour().at(0);
 				if (req.body.freq < 1 || req.body.freq >= 30)
-					return res
-						.status(422)
-						.json({ error: "Days must be between 1 and 29" });
+					return res.status(422).json({ error: "Days must be between 1 and 29" });
 				if (req.body.freq > 1) job.dom().every(req.body.freq);
 				break;
 			case "months":
@@ -133,21 +120,14 @@ router.post("/configure", function(req, res) {
 				job.hour().at(0);
 				job.dom().at(1);
 				if (req.body.freq < 1 || req.body.freq >= 12)
-					return res
-						.status(422)
-						.json({ error: "Months must be between 1 and 11" });
+					return res.status(422).json({ error: "Months must be between 1 and 11" });
 				if (req.body.freq > 1) job.month().every(req.body.freq);
 				break;
 			case "default":
-				return res
-					.status(422)
-					.json({ error: "Invalid frequency unit" });
+				return res.status(422).json({ error: "Invalid frequency unit" });
 		}
 		crontab.save(function(err, crontab) {
-			if (err)
-				return res
-					.status(500)
-					.json({ error: "Error creating cron job" });
+			if (err) return res.status(500).json({ error: "Error creating cron job" });
 			var jobs = crontab.jobs();
 			res.status(200).json({ jobs: renderJobs(jobs) });
 		});
