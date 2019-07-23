@@ -51,6 +51,12 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', '
 	      controller: 'DashboardController',
 	      controllerAs: 'ctrl'
 	    })
+	    .state('alerts', {
+	      url: '/alerts',
+	      templateUrl: 'views/alerts.html',
+	      controller: 'ScansController',
+	      controllerAs: 'ctrl'
+	    })
 
 	$locationProvider.html5Mode(true);
 

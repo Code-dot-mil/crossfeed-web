@@ -1,15 +1,14 @@
-var models  = require('../models');
-var request = require('request');
-var CronJob = require('cron').CronJob;
-var Sequelize = require('sequelize');
+var models = require("../models");
+var request = require("request");
+var CronJob = require("cron").CronJob;
+var Sequelize = require("sequelize");
 
-var bd_api = require('./bd_api.js');
-var h1_api = require('./h1_api.js');
+var bd_api = require("./bd_api.js");
+var h1_api = require("./h1_api.js");
 
-var scans = require('./scans.js');
+var scans = require("./scans.js");
 
-var utils = require('./utils.js');
-
+var utils = require("./utils.js");
 
 // Helper function to format query parameters, i.e. limit, page, order
 function formatQueryParams(body) {
@@ -18,37 +17,37 @@ function formatQueryParams(body) {
 	var order = [];
 
 	var sortingKeys = Object.keys(body.sorting);
-    if (sortingKeys.length > 0) {
+	if (sortingKeys.length > 0) {
 		order.push([sortingKeys[0], body.sorting[sortingKeys[0]]]);
-    } else {
-		order.push(['id', 'ASC']);
+	} else {
+		order.push(["id", "ASC"]);
 	}
 
 	var where = {};
 	for (filter in body.filter) {
-		if (filter == 'ports' && body.filter[filter] == '80,443') {
-			where['$or'] = [
+		if (filter == "ports" && body.filter[filter] == "80,443") {
+			where["$or"] = [
 				{
-					ports: {$like: '%80%'}
+					ports: { $like: "%80%" }
 				},
 				{
-					ports: {$like: '%443%'}
+					ports: { $like: "%443%" }
 				}
 			];
-			continue
+			continue;
 		}
-		if (filter == 'ports' && body.filter[filter] == 'not_null') {
-			where['$and'] = [
+		if (filter == "ports" && body.filter[filter] == "not_null") {
+			where["$and"] = [
 				{
-					ports: {[Sequelize.Op.ne]: null}
+					ports: { [Sequelize.Op.ne]: null }
 				},
 				{
-					ports: {[Sequelize.Op.ne]: ''}
+					ports: { [Sequelize.Op.ne]: "" }
 				}
 			];
-			continue
+			continue;
 		}
-		where[filter] = {$like: '%' + body.filter[filter] + '%'};
+		where[filter] = { $like: "%" + body.filter[filter] + "%" };
 	}
 
 	return {
@@ -57,27 +56,26 @@ function formatQueryParams(body) {
 		offset: limit * (page - 1),
 		order: order,
 		where: where
-	}
+	};
 }
 
 module.exports = function(app) {
+	app.use("/api/bd", bd_api);
+	app.use("/api/h1", h1_api);
 
-	app.use('/api/bd', bd_api);
-	app.use('/api/h1', h1_api);
+	app.use("/api/scans", scans);
 
-	app.use('/api/scans', scans);
-
-	app.get('/api/vulns/categorize', function(req, res) {
+	app.get("/api/vulns/categorize", function(req, res) {
 		models.Vulnerability.findAll().then(function(vulns) {
 			for (vuln of vulns) {
 				var domains = utils.findDomains(vuln.contents);
-				vuln.updateAttributes({ 'domains': domains.join(',')})
+				vuln.updateAttributes({ domains: domains.join(",") });
 			}
 			res.status(200).json({});
 		});
-	})
+	});
 
-	app.get('/api/vulns/associate', function(req, res) {
+	app.get("/api/vulns/associate", function(req, res) {
 		models.Vulnerability.findAll().then(function(vulns) {
 			/*for (vuln of vulns) {
 				console.log(vuln.domains)
@@ -94,94 +92,100 @@ module.exports = function(app) {
 			}
 			res.status(200).json({});*/
 		});
-	})
+	});
 
 	// Search domains
-	app.post('/api/domains/search', function(req, res) {
-		var params = formatQueryParams(req.body)
+	app.post("/api/domains/search", function(req, res) {
+		var params = formatQueryParams(req.body);
 
 		models.Domain.findAndCountAll({
 			order: params.order,
-	        limit: params.limit,
-	        offset: params.offset,
-	        where: params.where,
-	        attributes: ['name', 'ip', 'ports', 'id', 'services']
+			limit: params.limit,
+			offset: params.offset,
+			where: params.where,
+			attributes: ["name", "ip", "ports", "id", "services"]
 		}).then(function(domains) {
 			res.status(200).json(domains);
 		});
 	});
 
-
 	// Search vulnerabilities
-	app.post('/api/vulns/search', function(req, res) {
+	app.post("/api/vulns/search", function(req, res) {
 		if (Object.entries(req.body).length === 0) {
-			return models.Vulnerability.findAll({attributes: { exclude: ['contents'] }}).then(function(vulns) {
+			return models.Vulnerability.findAll({
+				attributes: { exclude: ["contents"] }
+			}).then(function(vulns) {
 				res.status(200).json(vulns);
 			});
 		}
-		var params = formatQueryParams(req.body)
+		var params = formatQueryParams(req.body);
 
 		models.Vulnerability.findAndCountAll({
 			order: params.order,
-	        limit: params.limit,
-	        offset: params.offset,
-	        where: params.where,
-	        attributes: { exclude: ['contents'] }
+			limit: params.limit,
+			offset: params.offset,
+			where: params.where,
+			attributes: { exclude: ["contents"] }
 		}).then(function(vulns) {
 			res.status(200).json(vulns);
 		});
 	});
 
 	// Fetch a single domain
-	app.get('/api/domains/:id', function(req, res) {
+	app.get("/api/domains/:id", function(req, res) {
 		models.Domain.findOne({
-			where: { id: req.params.id } 
+			where: { id: req.params.id }
 		}).then(function(domain) {
 			res.status(200).json(domain);
 		});
 	});
 
 	// Fetch a single vuln
-	app.get('/api/vulns/:id', function(req, res) {
+	app.get("/api/vulns/:id", function(req, res) {
 		models.Vulnerability.findOne({
-			where: { id: req.params.id } 
+			where: { id: req.params.id }
 		}).then(function(vuln) {
 			res.status(200).json(vuln);
 		});
 	});
 
 	// [deprecated] Add a single domain
-	app.post('/api/domains', function(req, res) {
+	app.post("/api/domains", function(req, res) {
 		var domain = req.body.domain;
-		console.log(domain)
+		console.log(domain);
 		models.Domain.create({
-			'name': domain
+			name: domain
 		}).then(domain => {
 			res.status(200).json();
 		});
 	});
 
 	// TODO: search full text of all HTTP responses
-	app.get('/api/domains/search', function(req, res) {
+	app.get("/api/domains/search", function(req, res) {
 		// Utilize Postgres full-text query
-		models.sequelize.query(`
+		models.sequelize
+			.query(
+				`
 			SELECT domain, title, ts_headline(contents, :query) as contents
 			FROM ${models.Domain.tableName}
 			WHERE _search @@ plainto_tsquery('english', :query);
-		`, {
-			model: models.Domain,
-			replacements: { query: req.query.q },
-		}).then(searchResults => {
-			console.log(searchResults)
-			res.status(200).json(searchResults);
-		});
+		`,
+				{
+					model: models.Domain,
+					replacements: { query: req.query.q }
+				}
+			)
+			.then(searchResults => {
+				console.log(searchResults);
+				res.status(200).json(searchResults);
+			});
 	});
 
-	app.delete('/api/domains/:id', function(req, res) {
+	app.delete("/api/domains/:id", function(req, res) {
 		models.Domain.destroy({
-		    where: {
-		        'id': req.params.id
-		    }
+			where: {
+				id: req.params.id
+			}
 		}).then(() => {
 			res.status(200).json({});
 		});
@@ -189,8 +193,7 @@ module.exports = function(app) {
 
 	// frontend routes =========================================================
 	// route to handle all angular requests
-	app.get('*', function(req, res) {
-		res.sendfile('./public/index.html');
+	app.get("*", function(req, res) {
+		res.sendfile("./public/index.html");
 	});
-
 };
