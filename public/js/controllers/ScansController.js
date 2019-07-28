@@ -12,7 +12,7 @@ angular.module("ScansController", []).controller("ScansController", [
 		this.freq = "";
 		this.commandType = "";
 
-		$scope.isFirstOpen = true;
+		$scope.tasks = {};
 
 		this.fetchLogs = function() {
 			Scans.fetchLogs()
@@ -86,14 +86,36 @@ angular.module("ScansController", []).controller("ScansController", [
 		};
 
 		this.pollRunningTasks = function() {
-			this.getRunningTasks();
+			this.getTasks("running");
+			this.getTasks("all");
 			setInterval(this.getRunningTasks, 5000);
 		};
 
-		this.getRunningTasks = function() {
-			Scans.getTasksWithStatus("running")
+		this.getTasks = function(type) {
+			Scans.getTasksWithStatus(type)
 				.then(response => {
-					$scope.tasks = response.data;
+					for (task of response.data) {
+						if (task.status == "running") {
+							task.type = "warning";
+						} else if (task.status == "failed") {
+							task.type = "danger";
+						} else if (task.status == "finished") {
+							task.type = "success";
+						}
+						task.status = task.status[0].toUpperCase() + task.status.substring(1);
+					}
+					$scope.tasks[type] = response.data;
+					console.log($scope.tasks[type]);
+				})
+				.catch(error => {
+					toaster.pop("error", "Error", error.data.error);
+				});
+		};
+
+		this.getAllTasks = function() {
+			Scans.getTasksWithStatus("all")
+				.then(response => {
+					$scope.allTasks = response.data;
 				})
 				.catch(error => {
 					toaster.pop("error", "Error", error.data.error);

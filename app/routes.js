@@ -150,9 +150,15 @@ module.exports = function(app) {
 	});
 
 	// Get the status of all tasks
-	app.get("/api/tasks/running", function(req, res) {
+	app.get("/api/tasks/:type", function(req, res) {
+		let filter = {};
+		let order = [["id", "desc"]];
+		if (req.params.type === "running") {
+			filter.status = "running";
+		}
 		models.TaskStatus.findAll({
-			where: { status: "running" }
+			where: filter,
+			order: order
 		}).then(function(tasks) {
 			res.status(200).json(tasks);
 		});

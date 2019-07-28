@@ -4,6 +4,10 @@ td {
 	padding:10px;
 }
 
+.text-small {
+	font-size: 18px !important;
+}
+
 .bar{
 	border-radius: 2px;
 	width: 400px;
