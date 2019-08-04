@@ -20,5 +20,9 @@ angular.module("Domain", []).service("Domain", [
     this.delete = function(id) {
       return $http.delete("/api/domains/" + id);
     };
+
+    this.loadAll = function(type) {
+      return $http.get("/api/values/?type=" + type);
+    };
   }
 ]);

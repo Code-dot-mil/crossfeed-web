@@ -42,7 +42,7 @@ function loadCrontab(callback) {
 router.get("/logs", function(req, res) {
 	path = process.env.LOG_FILE + moment(new Date()).format("YYYY-MM") + ".txt";
 	readLastLines
-		.read(path, 100)
+		.read(path, 1000)
 		.catch(function(error) {
 			res.status(500).json({ logs: "Could not find log file." });
 		})

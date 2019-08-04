@@ -15,8 +15,10 @@ angular
 
 			this.type = "domains"; // Default to domains search
 
-			// prettier-ignore
-			this.services = ["PHP", "Node.js", "Ruby", "Oracle HTTP Server", "Java", "jQuery UI", "jQuery", "Microsoft ASP.NET", "IIS 8.5", "Windows Server", "Microsoft HTTPAPI 2.0", "Apache", "Microsoft SharePoint", "Microsoft ASP.NET Viper", "Modernizr", "Twitter", "IIS 7.5", "ZURB Foundation", "Google Tag Manager", "Adobe Experience Manager", "Plone", "Python", "F5 BigIP", "animate.css", "Bootstrap", "prettyPhoto", "OWL Carousel", "Red Hat", "Apache 2.2.15", "Azure", "Google Analytics", "jQuery Migrate", "DNN", "Font Awesome", "Hammer.js", "Google Font API", "Instabot", "Amazon S3", "Amazon Web Services"];
+			this.all = {
+				ports: [],
+				services: []
+			};
 
 			this.fetchAll = () => {
 				var tableParams = {
@@ -32,6 +34,9 @@ angular
 					filterDelay: 1000,
 					getData: this.search
 				});
+
+				this.loadAll("ports");
+				this.loadAll("services");
 			};
 
 			this.search = params => {
@@ -81,6 +86,31 @@ angular
 					.catch(error => {
 						console.log(error);
 					});
+			};
+
+			this.loadAll = type => {
+				var savedState = localStorage.getItem(type);
+				if (savedState) {
+					this.all[type] = JSON.parse(savedState);
+					console.log(this.all[type]);
+				} else {
+					Domain.loadAll(type)
+						.then(response => {
+							if (type == "ports") {
+								processed = response.data
+									.sort((a, b) => parseInt(a) - parseInt(b))
+									.map(p => ({ title: p, id: p }));
+							} else {
+								processed = response.data;
+							}
+							this.all[type] = processed;
+							console.log(this.all[type]);
+							localStorage.setItem(type, JSON.stringify(processed));
+						})
+						.catch(error => {
+							console.log(error);
+						});
+				}
 			};
 		}
 	])

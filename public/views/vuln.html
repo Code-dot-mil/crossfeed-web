@@ -1,7 +1,19 @@
-<div class="jumbotron"  ng-init="ctrl.fetch()">
+<div class="jumbotron" ng-init="ctrl.fetch()">
+	<div class="btn-group" uib-dropdown is-open="status.isopen" style="float: right;">
+		<button id="single-button" type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled">
+			Actions <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+			<li role="menuitem"><a href="#">Scan for other vulnerabilities like this</a></li>
+			<li role="menuitem">
+				<a href="https://hackerone.com/reports/{{ctrl.vuln.hackerone_id}}" target="_blank"
+					>Open report on HackerOne</a
+				>
+			</li>
+		</ul>
+	</div>
 	<h2>{{ctrl.vuln.title}}</h2>
 	<p>#{{ctrl.vuln.hackerone_id}}</p>
-	<p><a href="https://hackerone.com/reports/{{ctrl.vuln.hackerone_id}}" target="_blank">Open report on HackerOne</a></p>
 
 	<p>Affected domains: {{ctrl.vuln.domains}}</p>
 	<p>State: {{ctrl.vuln.state}} ({{ctrl.vuln.substate}})</p>
@@ -12,5 +24,4 @@
 
 	<p>Contents:</p>
 	<div style="white-space: pre-wrap;">{{ctrl.vuln.contents}}</div>
-
 </div>

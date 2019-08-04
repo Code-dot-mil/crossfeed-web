@@ -20,8 +20,13 @@
 			<td title="'IP'" sortable="'ip'" filter="{ip: 'text'}">
 				{{domain.ip}}
 			</td>
-			<td title="'Ports'" sortable="'ports'" filter="{ports: 'text'}" style="width:10px">
-				<!-- filter-data="[{id: 'not_null', title: 'Any'}, {id: '80,443', title: '80 or 443'}, {id: '80', title: '80'}, {id: '65535', title: '443'}]" -->
+			<td
+				title="'Ports'"
+				sortable="'ports'"
+				filter="{ports: 'select'}"
+				style="width:10px"
+				filter-data="ctrl.all.ports"
+			>
 				{{domain.ports}}
 			</td>
 			<td
@@ -44,5 +49,5 @@
 </div>
 
 <script type="text/ng-template" id="filters/service-filter.html">
-	<input ng-model="params.filter()[name]" class="form-control" uib-typeahead="service for service in ctrl.services | filter:$viewValue | limitTo:8"></input>
+	<input ng-model="params.filter()[name]" class="form-control" uib-typeahead="service for service in ctrl.all.services | filter:$viewValue | limitTo:8"></input>
 </script>

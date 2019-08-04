@@ -1,13 +1,10 @@
 var models = require("../models");
 var request = require("request");
-var CronJob = require("cron").CronJob;
 var Sequelize = require("sequelize");
 
 var bd_api = require("./bd_api.js");
 var h1_api = require("./h1_api.js");
-
 var scans = require("./scans.js");
-
 var utils = require("./utils.js");
 
 // Helper function to format query parameters, i.e. limit, page, order
@@ -215,6 +212,26 @@ module.exports = function(app) {
 			}
 		}).then(() => {
 			res.status(200).json({});
+		});
+	});
+
+	app.get("/api/values", function(req, res) {
+		if (!["services", "ports"].includes(req.query.type)) {
+			return res.status(422).json({ error: "Invalid type" });
+		}
+		models.Domain.findAll({
+			attributes: [[Sequelize.fn("DISTINCT", Sequelize.col(req.query.type)), req.query.type]]
+		}).then(function(types) {
+			var allTypes = types.map(type => {
+				var val = type.dataValues[req.query.type];
+				if (val == null) return [];
+				return val
+					.split(",")
+					.map(t => t.trim())
+					.filter(t => t != "");
+			});
+			var flattened = [].concat.apply([], allTypes);
+			res.status(200).json(Array.from(new Set(flattened)));
 		});
 	});
 
