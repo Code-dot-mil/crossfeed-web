@@ -1,10 +1,9 @@
-<div class="jumbotron" ng-init="ctrl.fetchLogs()">
+<div class="jumbotron" ng-init="ctrl.fetchAlerts()">
 	<h2>Latest alerts</h2>
 
-	<uib-accordion close-others="oneAtATime">
-		<div uib-accordion-group class="panel-default" heading="Static Header, initially expanded" is-open="isFirstOpen" is-disabled="isFirstDisabled">
-	      This content is straight in the template.
-	    </div>
+	<uib-accordion ng-repeat="alert in ctrl.alerts">
+		<div uib-accordion-group class="panel-default" heading="{{alert.source}}" is-open="alert.isOpen">
+			<span style="white-space: pre;">{{alert.text}}</span>
+		</div>
 	</uib-accordion>
-
 </div>

@@ -25,7 +25,7 @@
 		<div ng-repeat="task in tasks['all']" class="col-sm-4">
 			<h4>{{task.status}}: {{task.command}}</h4>
 			<h4>{{task.updatedAt | date}}</h4>
-			<uib-progressbar class="progress-striped active" value="task.percentage" type="{{task.type}}"
+			<uib-progressbar class="progress" value="task.percentage" type="{{task.type}}"
 				>{{task.percentage}}%</uib-progressbar
 			>
 			</p>

@@ -1,5 +1,8 @@
-<div class="jumbotron"  ng-init="ctrl.type = 'domains'; ctrl.fetchAll()">
-	<h2>Home <button type="submit" class="btn btn-default" style="float:right" ng-click="ctrl.clear()">Clear Filters</button></h2>
+<div class="jumbotron" ng-init="ctrl.type = 'domains'; ctrl.fetchAll()">
+	<h2>
+		Home
+		<button type="submit" class="btn btn-default" style="float:right" ng-click="ctrl.clear()">Clear Filters</button>
+	</h2>
 	<!-- <div class="input-group">
 		<input type="text" ng-model="ctrl.searchString" placeholder="" class="form-control" />
 		<span class="input-group-btn">
@@ -7,25 +10,39 @@
 		</span>
 	</div><br> -->
 
-	<br><br>
+	<br /><br />
 
 	<table ng-table="ctrl.tableParams" class="table table-bordered table-striped table-condensed">
-	    <tr ng-repeat="domain in $data">
-	        <td title="'Domain'" sortable="'name'" filter="{name: 'text'}">
-	            {{domain.name}}</td>
-	        <td title="'IP'" sortable="'ip'" filter="{ip: 'text'}">
-	            {{domain.ip}}</td>
-	        <td title="'Ports'" sortable="'ports'" filter="{ports: 'select'}" filter-data="[{id: 'not_null', title: 'Any'}, {id: '80,443', title: '80 or 443'}, {id: '80', title: '80'}, {id: '65535', title: '443'}]" style="width:10px">
-	            {{domain.ports}}</td>
-	        <td title="'Services'" sortable="'services'" filter="{services: 'filters/service-filter.html'}" style="width:200px">
-	            {{domain.services}}</td>
-	        <td width="1px"><button class="btn btn-default btn-sm" ui-sref="view-domain({id: domain.id})"><span class="glyphicon glyphicon-search"></span></button></td>
-	    </tr>
+		<tr ng-repeat="domain in $data">
+			<td title="'Domain'" sortable="'name'" filter="{name: 'text'}">
+				{{domain.name}}
+			</td>
+			<td title="'IP'" sortable="'ip'" filter="{ip: 'text'}">
+				{{domain.ip}}
+			</td>
+			<td title="'Ports'" sortable="'ports'" filter="{ports: 'text'}" style="width:10px">
+				<!-- filter-data="[{id: 'not_null', title: 'Any'}, {id: '80,443', title: '80 or 443'}, {id: '80', title: '80'}, {id: '65535', title: '443'}]" -->
+				{{domain.ports}}
+			</td>
+			<td
+				title="'Services'"
+				sortable="'services'"
+				filter="{services: 'filters/service-filter.html'}"
+				style="width:200px"
+			>
+				{{domain.services}}
+			</td>
+			<td width="1px">
+				<button class="btn btn-default btn-sm" ui-sref="view-domain({id: domain.id})">
+					<span class="glyphicon glyphicon-search"></span>
+				</button>
+			</td>
+		</tr>
 	</table>
 
 	<p style="font-size:11px; float:right;"><b>{{count | number}} results</b></p>
 </div>
 
 <script type="text/ng-template" id="filters/service-filter.html">
-<input ng-model="params.filter()[name]" class="form-control" uib-typeahead="service for service in ctrl.services | filter:$viewValue | limitTo:8"></input>
+	<input ng-model="params.filter()[name]" class="form-control" uib-typeahead="service for service in ctrl.services | filter:$viewValue | limitTo:8"></input>
 </script>

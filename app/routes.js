@@ -164,6 +164,18 @@ module.exports = function(app) {
 		});
 	});
 
+	// Get all alerts
+	app.get("/api/alerts", function(req, res) {
+		let filter = {};
+		let order = [["id", "desc"]];
+		models.Alert.findAll({
+			where: filter,
+			order: order
+		}).then(function(alerts) {
+			res.status(200).json(alerts);
+		});
+	});
+
 	// [deprecated] Add a single domain
 	app.post("/api/domains", function(req, res) {
 		var domain = req.body.domain;

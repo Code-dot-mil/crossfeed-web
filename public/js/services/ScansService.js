@@ -5,6 +5,10 @@ angular.module("Scans", []).service("Scans", [
       return $http.get("/api/scans/logs");
     };
 
+    this.fetchAlerts = function() {
+      return $http.get("/api/alerts");
+    };
+
     this.getConfig = function() {
       return $http.get("/api/scans/configure");
     };

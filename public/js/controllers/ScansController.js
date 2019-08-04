@@ -12,6 +12,8 @@ angular.module("ScansController", []).controller("ScansController", [
 		this.freq = "";
 		this.commandType = "";
 
+		this.alerts = [];
+
 		$scope.tasks = {};
 
 		this.fetchLogs = function() {
@@ -22,6 +24,20 @@ angular.module("ScansController", []).controller("ScansController", [
 						logs.shift();
 					}
 					this.logs = logs.join("\n");
+				})
+				.catch(error => {
+					toaster.pop("error", "Error", error.data.error);
+				});
+		};
+
+		this.fetchAlerts = function() {
+			Scans.fetchAlerts()
+				.then(response => {
+					this.alerts = response.data;
+					for (var alert of this.alerts) {
+						alert.isOpen = true;
+					}
+					console.log(this.alerts);
 				})
 				.catch(error => {
 					toaster.pop("error", "Error", error.data.error);
