@@ -1,5 +1,6 @@
 {
-    "name": "starter-node-angular",
+    "name": "crossfeed-web",
+    "private": "true",
     "main": "server.js",
     "dependencies": {
         "angular-chart.js": "^1.1.1",
