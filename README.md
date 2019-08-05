@@ -28,8 +28,8 @@ To get started, first copy relevent config files:
 3. In the [agent](https://github.com/deptofdefense/crossfeed-agent), run `cp config.example.json config.json`
 
 ### Install and configure the following dependencies
-- [Postgres](https://www.postgresql.org/docs/9.3/tutorial-install.html)
-- [Beanstalk](https://beanstalkd.github.io/download.html)
+- Install [Postgres](http://postgresguide.com/setup/install.html) and [start the server](https://www.postgresql.org/docs/8.2/server-start.html)
+- Install [Beanstalk](https://beanstalkd.github.io/download.html) and [start the daemon](https://beanstalkd.github.io/)
 
 Configure the Postgres database information in `config/config.json` on web and `config.json` for the agent. Likewise, configure the Beanstalk host and port in `.env` for web and `config.json` for the agent.
 
