@@ -7,9 +7,10 @@ exports.findDomains = function(text) {
 	for (ext of exts) {
 		var anyFound = false;
 		var split = text.split(ext);
-		for (var i=0; i<split.length-1; i++) {
+		var split_len = split.length;
+		for (var i=0; i < (split_len - 1); i++) {
 			var cur = split[i]
-			if (i < split.length - 2 && split[i+1].charAt(0).match(/^[0-9a-zA-Z]+$/)) {
+			if (i < (split_len - 2) && split[i+1].charAt(0).match(/^[0-9a-zA-Z]+$/)) {
 				// This accounts for cases where '.mil' appears within a domain name, i.e. msepjobs.militaryonesource.mil
 				cur += ext + split[i+1];
 				i++;
