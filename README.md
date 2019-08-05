@@ -1,5 +1,5 @@
 # Crossfeed
-External asset monitoring for DoD websites
+External monitoring for organization assets
 
 Crossfeed is a tool that blends external asset information with known vulnerabilities from the VDP in order to better secure DoD systems. Crossfeed continually scans for public facing assets using a number of OSINT and minimally invasive techniques. This information is then used in scans to discover indicators of vulnerabilities.
 
