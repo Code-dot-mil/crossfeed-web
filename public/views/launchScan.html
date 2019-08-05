@@ -1,0 +1,66 @@
+<div class="jumbotron" ng-init="ctrl.fetchVulnerability(); ctrl.loadAll('ports'); ctrl.loadAll('services');">
+	<h2>Launch Scan</h2>
+	<p>Source vulnerability #{{ctrl.vuln.hackerone_id}}</p>
+
+	<form class="simple-form">
+		<div class="form-group">
+			<label for="request">Request to send</label>
+			<textarea id="request" class="form-control" ng-model="ctrl.newScan.request" style="height:200px"></textarea
+			><br />
+
+			<label for="response">Response match values</label>
+			<div>
+				<div
+					ng-repeat="response in ctrl.newScan.responseMatches"
+					class="form-inline"
+					style="margin-bottom: 10px"
+				>
+					<input class="form-control" type="text" style="width:300px" ng-model="response.value" />
+					<button class="btn btn-default btn-sm" ng-click="ctrl.newScan.responseMatches.splice($index, 1)">
+						<span class="glyphicon glyphicon-remove"></span>
+					</button>
+				</div>
+				<button class="btn btn-default" ng-click="ctrl.newScan.responseMatches.push({})">Add</button>
+			</div>
+			<br />
+
+			<label for="response">Domains matching any of the following open ports:</label>
+			<div>
+				<p ng-if="ctrl.newScan.ports.length == 0">No port filters (not recommended)</p>
+				<div ng-repeat="port in ctrl.newScan.ports" class="form-inline" style="margin-bottom: 10px">
+					<select ng-model="port.value">
+						<option ng-repeat="p in ctrl.allValues.ports" value="{{p.title}}">{{p.title}}</option>
+					</select>
+					<button class="btn btn-default btn-sm" ng-click="ctrl.newScan.ports.splice($index, 1)">
+						<span class="glyphicon glyphicon-remove"></span>
+					</button>
+				</div>
+				<button class="btn btn-default" ng-click="ctrl.newScan.ports.push({})">Add</button>
+			</div>
+			<br />
+			<label for="response">Domains matching any of the following services:</label>
+			<div>
+				<p ng-if="ctrl.newScan.services.length == 0">Scanning regardless of service</p>
+				<div ng-repeat="service in ctrl.newScan.services" class="form-inline" style="margin-bottom: 10px">
+					<input ng-model="service.value" style="width:300px" class="form-control" uib-typeahead="service for service in ctrl.allValues.services | filter:$viewValue"></input>
+					<button class="btn btn-default btn-sm" ng-click="ctrl.newScan.services.splice($index, 1)">
+						<span class="glyphicon glyphicon-remove"></span>
+					</button>
+				</div>
+				<button class="btn btn-default" ng-click="ctrl.newScan.services.push({})">Add</button>
+			</div>
+			<br />
+
+			<button class="btn btn-default" ng-click="ctrl.previewCount()">Preview scan</button><br><br>
+			<div ng-if="ctrl.countPreview">
+				<p>The following HTTP request will be sent to {{ctrl.countPreview | number}} domains.</p>
+				<pre>{{ctrl.newScan.request}}</pre>
+			</div>
+
+			<button class="btn btn-default" ng-click="ctrl.beginScan()" ng-disabled="!ctrl.countPreview">Begin scan</button>
+		</div>
+	</form>
+
+	<p>Report Contents:</p>
+	<pre><div style="white-space: pre-wrap;">{{ctrl.vuln.contents}}</div></pre>
+</div>

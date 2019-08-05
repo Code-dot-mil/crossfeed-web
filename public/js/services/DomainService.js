@@ -21,8 +21,23 @@ angular.module("Domain", []).service("Domain", [
       return $http.delete("/api/domains/" + id);
     };
 
+    // Caches and loads all unique values for a given column
     this.loadAll = function(type) {
-      return $http.get("/api/values/?type=" + type);
+      var savedState = localStorage.getItem(type);
+      if (savedState) {
+        var vals = JSON.parse(savedState);
+        return new Promise(resolve => resolve(vals));
+      } else {
+        return $http.get("/api/values/?type=" + type).then(response => {
+          if (type == "ports") {
+            processed = response.data.sort((a, b) => parseInt(a) - parseInt(b)).map(p => ({ title: p, id: p }));
+          } else {
+            processed = response.data;
+          }
+          localStorage.setItem(type, JSON.stringify(processed));
+          return processed;
+        });
+      }
     };
   }
 ]);

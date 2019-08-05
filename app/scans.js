@@ -8,6 +8,7 @@ var moment = require("moment");
 var BeanstalkdWorker = require("beanstalkd-worker");
 var crontab = require("crontab");
 var shellescape = require("shell-escape");
+var parser = require("http-string-parser");
 
 const worker = new BeanstalkdWorker(process.env.BEANSTALK_HOST, process.env.BEANSTALK_PORT);
 
@@ -39,15 +40,72 @@ function loadCrontab(callback) {
 	}
 }
 
+function formatDomainQuery(body) {
+	var andConditions = [];
+	for (var filter in body.filters) {
+		if (body.filters[filter].length == 0) continue;
+		andConditions.push({
+			$or: body.filters[filter].map(val => {
+				var condition = {};
+				condition[filter] = {
+					$like: `%${val}%`
+				};
+				return condition;
+			})
+		});
+	}
+	return {
+		where: Sequelize.and(andConditions)
+	};
+}
+
 router.get("/logs", function(req, res) {
 	path = process.env.LOG_FILE + moment(new Date()).format("YYYY-MM") + ".txt";
 	readLastLines
-		.read(path, 1000)
+		.read(path, 100)
 		.catch(function(error) {
 			res.status(500).json({ logs: "Could not find log file." });
 		})
 		.then(lines => {
 			res.status(200).json({ logs: lines });
+		});
+});
+
+router.post("/launch/preview", function(req, res) {
+	var params = formatDomainQuery(req.body);
+
+	models.Domain.count({
+		where: params.where
+	}).then(function(count) {
+		res.status(200).json({ count: count });
+	});
+});
+
+router.post("/launch", function(req, res) {
+	var scan = {
+		filters: req.body.filters,
+		greps: req.body.greps,
+		request: parser.parseRequest(req.body.request)
+	};
+
+	worker
+		.spawn(
+			"default",
+			{
+				command: "scan-hosts jsonInput",
+				input: JSON.stringify(scan)
+			},
+			{
+				delay: 0,
+				priority: 1,
+				timeout: 60 * 60 * 1000 // ms
+			}
+		)
+		.catch(function(error) {
+			res.status(500).json({ error: "Could not create job." });
+		})
+		.then(function(job) {
+			return res.status(200).json({ status: "Successfully created job with id " + job.id });
 		});
 });
 
@@ -60,11 +118,17 @@ router.post("/enqueue", function(req, res) {
 		command += " " + req.body.args.join(" ");
 	}
 	worker
-		.spawn("default", command, {
-			delay: 0,
-			priority: 1,
-			timeout: 60 * 60 * 1000 // ms
-		})
+		.spawn(
+			"default",
+			{
+				command: command
+			},
+			{
+				delay: 0,
+				priority: 1,
+				timeout: 60 * 60 * 1000 // ms
+			}
+		)
 		.catch(function(error) {
 			res.status(500).json({ error: "Could not create job." });
 		})

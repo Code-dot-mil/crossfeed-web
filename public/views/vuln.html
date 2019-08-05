@@ -4,7 +4,9 @@
 			Actions <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-			<li role="menuitem"><a href="#">Scan for other vulnerabilities like this</a></li>
+			<li role="menuitem">
+				<a ui-sref="launch-scan({ vulnId: ctrl.vuln.id})">Scan for vulnerabilities like this</a>
+			</li>
 			<li role="menuitem">
 				<a href="https://hackerone.com/reports/{{ctrl.vuln.hackerone_id}}" target="_blank"
 					>Open report on HackerOne</a

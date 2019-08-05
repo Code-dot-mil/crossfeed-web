@@ -28,5 +28,13 @@ angular.module("Scans", []).service("Scans", [
     this.removeCron = function(index) {
       return $http.post("/api/scans/remove", { index: index });
     };
+
+    this.launchScan = function(body) {
+      return $http.post("/api/scans/launch", body);
+    };
+
+    this.previewCount = function(body) {
+      return $http.post("/api/scans/launch/preview", body);
+    };
   }
 ]);

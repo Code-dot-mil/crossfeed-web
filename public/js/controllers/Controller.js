@@ -35,7 +35,6 @@ angular
 					getData: this.search
 				});
 
-				this.loadAll("ports");
 				this.loadAll("services");
 			};
 
@@ -89,28 +88,14 @@ angular
 			};
 
 			this.loadAll = type => {
-				var savedState = localStorage.getItem(type);
-				if (savedState) {
-					this.all[type] = JSON.parse(savedState);
-					console.log(this.all[type]);
-				} else {
-					Domain.loadAll(type)
-						.then(response => {
-							if (type == "ports") {
-								processed = response.data
-									.sort((a, b) => parseInt(a) - parseInt(b))
-									.map(p => ({ title: p, id: p }));
-							} else {
-								processed = response.data;
-							}
-							this.all[type] = processed;
-							console.log(this.all[type]);
-							localStorage.setItem(type, JSON.stringify(processed));
-						})
-						.catch(error => {
-							console.log(error);
-						});
-				}
+				return Domain.loadAll(type)
+					.then(vals => {
+						this.all[type] = vals;
+						return vals;
+					})
+					.catch(error => {
+						console.log(error);
+					});
 			};
 		}
 	])

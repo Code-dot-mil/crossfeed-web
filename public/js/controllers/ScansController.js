@@ -6,15 +6,30 @@ angular.module("ScansController", []).controller("ScansController", [
 	"Scans",
 	"NgTableParams",
 	"toaster",
-	function($scope, $state, $stateParams, $window, Scans, NgTableParams, toaster) {
+	"Domain",
+	function($scope, $state, $stateParams, $window, Scans, NgTableParams, toaster, Domain) {
 		this.frequnit = "minutes";
 		this.commandArgs = "";
 		this.freq = "";
 		this.commandType = "";
+		this.newScan = {
+			responseMatches: [{}],
+			ports: [{}],
+			services: [{}],
+			request: `GET / HTTP/1.1
+Host: {host}
+User-Agent: crossfeed-scanner
+Connection: close`
+		};
 
 		this.alerts = [];
 
 		$scope.tasks = {};
+
+		this.allValues = {
+			ports: [],
+			services: []
+		};
 
 		this.fetchLogs = function() {
 			Scans.fetchLogs()
@@ -136,6 +151,64 @@ angular.module("ScansController", []).controller("ScansController", [
 				.catch(error => {
 					toaster.pop("error", "Error", error.data.error);
 				});
+		};
+
+		this.fetchVulnerability = () => {
+			Domain.fetchOne("vulns", $stateParams.vulnId)
+				.then(response => {
+					this.vuln = response.data;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		};
+
+		this.loadAll = type => {
+			Domain.loadAll(type)
+				.then(vals => {
+					this.allValues[type] = vals;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		};
+
+		this.beginScan = () => {
+			Scans.launchScan({
+				greps: this.filterVals(this.newScan.responseMatches),
+				request: this.newScan.request,
+				filters: {
+					ports: this.filterVals(this.newScan.ports),
+					services: this.filterVals(this.newScan.services)
+				}
+			})
+				.then(response => {
+					this.jobs = response.data.jobs;
+					toaster.pop("success", "Success", "Successfully added scan to queue!");
+				})
+				.catch(error => {
+					console.log(error);
+					toaster.pop("error", "Error", error.data.error);
+				});
+		};
+
+		this.previewCount = () => {
+			Scans.previewCount({
+				filters: {
+					ports: this.filterVals(this.newScan.ports),
+					services: this.filterVals(this.newScan.services)
+				}
+			})
+				.then(response => {
+					this.countPreview = response.data.count;
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		};
+
+		this.filterVals = vals => {
+			return vals.map(val => val.value).filter(val => val);
 		};
 	}
 ]);
