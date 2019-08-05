@@ -20,14 +20,29 @@ Crossfeed Web (this repository) sits as the user-facing end of Crossfeed. This d
 
 Scans are queued via [Beanstalk](https://beanstalkd.github.io/) and dispatched by crossfeed agent. This is designed for a multi-host environment, where backend scanners process incoming scan requests asynchronously.
 
-## Development (in process of dockerizing)
+## Development
 
-### Ensure the following are installed and running:
-- Postgres
-- Beanstalk
+To get started, first copy relevent config files:
+1. Run `cp .env.example .env`
+2. Run `cp config/config.example.json config/config.json`
+3. In the [agent](https://github.com/deptofdefense/crossfeed-agent), run `cp config.example.json config.json`
+
+### Install and configure the following dependencies
+- [Postgres](https://www.postgresql.org/docs/9.3/tutorial-install.html)
+- [Beanstalk](https://beanstalkd.github.io/download.html)
+
+Configure the Postgres database information in `config/config.json` on web and `config.json` for the agent. Likewise, configure the Beanstalk host and port in `.env` for web and `config.json` for the agent.
+
+### Obtain API Keys
+
+Crossfeed integrates with several APIs. Configure the following API keys to make full use of the tool:
+
+- `SONAR_API_KEY` (agent) - The Rapid7 [Project Sonar](https://www.rapid7.com/research/project-sonar/) API key, used to download port scan data
+- `SLACK_WEBHOOK_URL` (agent) - A Slack [incoming webhook](https://api.slack.com/incoming-webhooks) url, used to post alerts to Slack
+- `BD_API_KEY` (web, optional) - A [BitDiscovery](https://bitdiscovery.com) API key, optionally used for importing data
+
+### Quick start
 
 1. Run `npm install`
-2. Copy `cp .env.example .env` and configure ENV variables
-3. Copy `cp config/config.example.json config/config.json` and configure Postgres information
-4. Run `sequelize db:migrate`
-5. Run `node server.js`
+2. Run `sequelize db:migrate`
+3. Run `node server.js`
