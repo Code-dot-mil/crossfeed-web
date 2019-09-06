@@ -186,27 +186,6 @@ module.exports = function(app) {
 		});
 	});
 
-	// TODO: search full text of all HTTP responses
-	app.get("/api/domains/search", function(req, res) {
-		// Utilize Postgres full-text query
-		models.sequelize
-			.query(
-				`
-			SELECT domain, title, ts_headline(contents, :query) as contents
-			FROM ${models.Domain.tableName}
-			WHERE _search @@ plainto_tsquery('english', :query);
-		`,
-				{
-					model: models.Domain,
-					replacements: { query: req.query.q }
-				}
-			)
-			.then(searchResults => {
-				console.log(searchResults);
-				res.status(200).json(searchResults);
-			});
-	});
-
 	app.delete("/api/domains/:id", function(req, res) {
 		models.Domain.destroy({
 			where: {
@@ -237,8 +216,7 @@ module.exports = function(app) {
 		});
 	});
 
-	// frontend routes =========================================================
-	// route to handle all angular requests
+	// frontend routes
 	app.get("*", function(req, res) {
 		res.sendfile("./client/index.html");
 	});
