@@ -1,6 +1,0 @@
-<div class="autocomplete">
-    <input ng-model="model" ng-change="autocomplete(model)" ng-disabled="ngDisabled" ng-keydown="keyEvent($event)"/>
-    <ul ng-show="showOptions">
-        <li ng-repeat="option in filteredOptions track by $index" ng-bind-html="option.text" ng-click="selectOption(option.value)" ng-class="{'selected': $index == selected}"></li>
-    </ul>
-</div>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<base href="/" />
+
+		<title>Crossfeed</title>
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<!-- custom styles -->
+		<link rel="stylesheet" href="node_modules/angular-toastr/dist/angular-toastr.min.css" />
+
+		<!-- JS -->
+		<script src="node_modules/jquery/dist/jquery.min.js"></script>
+		<script src="node_modules/angular/angular.min.js"></script>
+		<script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+		<script src="node_modules/angular-route/angular-route.min.js"></script>
+		<script src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+		<script src="node_modules/angularjs-toaster/toaster.min.js"></script>
+		<script src="node_modules/chart.js/dist/Chart.min.js"></script>
+		<script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
+		<script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+		<script src="node_modules/angular-animate/angular-animate.min.js"></script>
+
+		<!-- ng-table library -->
+		<link rel="stylesheet" ; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css" />
+		<script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
+
+		<!-- ANGULAR CUSTOM -->
+		<script src="dist/app.bundle.js"></script>
+	</head>
+	<body ng-app="app">
+		<div class="container">
+			<!-- HEADER -->
+			<nav class="navbar navbar-inverse">
+				<div class="navbar-header">
+					<a class="navbar-brand">Crossfeed</a>
+					<a class="navbar-brand" ui-sref="home">Home</a>
+					<a class="navbar-brand" ui-sref="vulns">Vulnerabilities</a>
+					<a class="navbar-brand" ui-sref="dashboard">Risk Dashboard</a>
+					<a class="navbar-brand" ui-sref="alerts">Alerts</a>
+				</div>
+				<ul class="nav navbar-nav pull-right">
+					<li><a ui-sref="scans">Configure Scans</a></li>
+					<li><a ui-sref="logs">View Logs</a></li>
+					<li><a ui-sref="settings">Settings</a></li>
+				</ul>
+			</nav>
+
+			<toaster-container toaster-options="{'time-out': 5000}"></toaster-container>
+			<!-- ANGULAR DYNAMIC CONTENT -->
+			<div ui-view></div>
+		</div>
+	</body>
+</html>

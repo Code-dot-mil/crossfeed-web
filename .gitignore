@@ -1,4 +1,5 @@
 node_modules/
+client/node_modules
 .env
 tmp/*
 .DS_STORE
