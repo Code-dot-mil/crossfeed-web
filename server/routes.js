@@ -13,11 +13,13 @@ function formatQueryParams(body) {
 	var page = body.page || 1;
 	var order = [];
 
-	var sortingKeys = Object.keys(body.sorting);
-	if (sortingKeys.length > 0) {
-		order.push([sortingKeys[0], body.sorting[sortingKeys[0]]]);
-	} else {
-		order.push(["id", "ASC"]);
+	if (body.sorting) {
+		var sortingKeys = Object.keys(body.sorting);
+		if (sortingKeys.length > 0) {
+			order.push([sortingKeys[0], body.sorting[sortingKeys[0]]]);
+		} else {
+			order.push(["id", "ASC"]);
+		}
 	}
 
 	var where = {};
