@@ -8,12 +8,13 @@ var app = require("../server");
 
 describe("Server", () => {
   describe("GET /", () => {
-    it("should respond 401 when unauthenticated", done => {
+    it("should respond 302 when unauthenticated", done => {
       chai
         .request(app)
         .get("/")
+        .redirects(0)
         .end((err, res) => {
-          res.should.have.status(401);
+          res.should.have.status(302);
           done();
         });
     });

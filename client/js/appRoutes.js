@@ -4,8 +4,6 @@ angular.module("appRoutes", []).config([
 	"$stateProvider",
 	function($routeProvider, $locationProvider, $stateProvider) {
 		$stateProvider
-
-			// home page
 			.state("home", {
 				url: "/",
 				templateUrl: "views/home.html",

@@ -9,7 +9,6 @@ require("./services/DomainService");
 require("./services/IntegrationService");
 require("./services/ScansService");
 
-require("./appDirectives");
 require("./appRoutes");
 
 angular.module("app", [

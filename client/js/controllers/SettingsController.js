@@ -1,5 +1,11 @@
-angular.module("SettingsController", []).controller([
-	"SettingsController",
+angular.module("SettingsController", []).controller("SettingsController", [
+	"$scope",
+	"$state",
+	"$stateParams",
+	"$window",
+	"Integration",
+	"NgTableParams",
+	"toaster",
 	function($scope, $state, $stateParams, $window, Integration, NgTableParams, toaster) {
 		this.loadBDSources = function() {
 			Integration.fetchBDSources()

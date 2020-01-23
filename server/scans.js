@@ -5,12 +5,13 @@ var router = express.Router();
 var fs = require("fs");
 var readLastLines = require("read-last-lines");
 var moment = require("moment");
-var BeanstalkdWorker = require("beanstalkd-worker");
+var AWS = require("aws-sdk");
 var crontab = require("crontab");
 var shellescape = require("shell-escape");
 var parser = require("http-string-parser");
 
-const worker = new BeanstalkdWorker(process.env.BEANSTALK_HOST, process.env.BEANSTALK_PORT);
+AWS.config.update({ region: process.env.AWS_REGION });
+var sqs = new AWS.SQS();
 
 const validCommands = ["scan-ports", "scan-hosts", "subjack"];
 
@@ -88,24 +89,16 @@ router.post("/launch", function(req, res) {
 		request: parser.parseRequest(req.body.request)
 	};
 
-	worker
-		.spawn(
-			"default",
-			{
-				command: "scan-hosts jsonInput",
-				input: JSON.stringify(scan)
-			},
-			{
-				delay: 0,
-				priority: 1,
-				timeout: 60 * 60 * 1000 // ms
-			}
-		)
+	sqs.sendMessage({
+		QueueUrl: process.env.SQS_URL,
+		MessageBody: JSON.stringify({ command: "scan-hosts jsonInput", payload: JSON.stringify(scan) })
+	})
+		.promise()
 		.catch(function(error) {
 			res.status(500).json({ error: "Could not create job." });
 		})
 		.then(function(job) {
-			return res.status(200).json({ status: "Successfully created job with id " + job.id });
+			return res.status(200).json({ status: "Successfully created job with id " + job.MessageId });
 		});
 });
 
@@ -117,23 +110,17 @@ router.post("/enqueue", function(req, res) {
 	if (req.body.args && req.body.args.length > 0) {
 		command += " " + req.body.args.join(" ");
 	}
-	worker
-		.spawn(
-			"default",
-			{
-				command: command
-			},
-			{
-				delay: 0,
-				priority: 1,
-				timeout: 60 * 60 * 1000 // ms
-			}
-		)
+
+	sqs.sendMessage({
+		QueueUrl: process.env.SQS_URL,
+		MessageBody: JSON.stringify({ command: command })
+	})
+		.promise()
 		.catch(function(error) {
 			res.status(500).json({ error: "Could not create job." });
 		})
 		.then(function(job) {
-			return res.status(200).json({ status: "Successfully created job with id " + job.id });
+			return res.status(200).json({ status: "Successfully created job with id " + job.MessageId });
 		});
 });
 
@@ -156,10 +143,15 @@ router.post("/configure", function(req, res) {
 			console.log(req.body);
 			return res.status(422).json({ error: "Invalid command" });
 		}
-		var command = `cd ${process.env.AGENT_DIR}; ./crossfeed-agent enqueue `;
-		var args = [req.body.commandType].concat(req.body.commandArgs.split(" "));
-		var escaped = shellescape(args);
-		var job = crontab.create(command + escaped);
+
+		var commandStr = req.body.commandType;
+		if (req.body.commandArgs !== "") commandStr += " " + req.body.commandArgs;
+
+		var body = { command: commandStr };
+		var command = `aws sqs send-message --queue-url ${process.env.SQS_URL} --message-body '${JSON.stringify(
+			body
+		)}'`;
+		var job = crontab.create(command);
 		switch (req.body.frequnit) {
 			case "minutes":
 				if (req.body.freq < 1 || req.body.freq >= 60)
