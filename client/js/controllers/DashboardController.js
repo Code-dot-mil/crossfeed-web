@@ -11,6 +11,23 @@ angular
 			this.vulns = [];
 			this.stats = {};
 
+			this.getMonthLabels = function(format) {
+				var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+				var today = new Date();
+				var month = today.getMonth();
+				var year = today.getYear() + 1900;
+				var list = [];
+				for (var i = 0; i < 12; i++) {
+					list.push(format(month + 1, months[month], year));
+					month--;
+					if (month < 0) {
+						month = 11;
+						year -= 1;
+					}
+				}
+				return list.reverse();
+			};
+
 			this.type = "vulns";
 			this.charts = {
 				severities: {
@@ -20,20 +37,7 @@ angular
 				},
 				monthly: {
 					data: [],
-					labels: [
-						"Aug 2018",
-						"Sept 2018",
-						"Oct 2018",
-						"Nov 2018",
-						"Dec 2018",
-						"Jan 2019",
-						"Feb 2019",
-						"Mar 2019",
-						"Apr 2019",
-						"May 2019",
-						"June 2019",
-						"July 2019"
-					],
+					labels: this.getMonthLabels((_, month, year) => month + " " + year),
 					options: {
 						responsive: true,
 						maintainAspectRatio: false,
@@ -163,20 +167,7 @@ angular
 					this.stats.severities.low,
 					this.stats.severities.none
 				];
-				var months = [
-					"2018-08",
-					"2018-09",
-					"2018-10",
-					"2018-11",
-					"2018-12",
-					"2019-01",
-					"2019-02",
-					"2019-03",
-					"2019-04",
-					"2019-05",
-					"2019-06",
-					"2019-07"
-				];
+				var months = this.getMonthLabels((ind, _, year) => year + "-" + (ind > 9 ? ind : "0" + ind));
 				var data = new Array(12).fill(0);
 				for (var vuln of this.vulns) {
 					for (var i in months) {

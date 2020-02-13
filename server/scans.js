@@ -116,11 +116,11 @@ router.post("/enqueue", function(req, res) {
 		MessageBody: JSON.stringify({ command: command })
 	})
 		.promise()
-		.catch(function(error) {
-			res.status(500).json({ error: "Could not create job." });
-		})
 		.then(function(job) {
 			return res.status(200).json({ status: "Successfully created job with id " + job.MessageId });
+		})
+		.catch(function(error) {
+			res.status(500).json({ error: "Could not create job." });
 		});
 });
 
