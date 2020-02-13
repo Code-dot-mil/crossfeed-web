@@ -40,31 +40,34 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
 	done(null, { profile: { id: id } });
 });
-passport.use(
-	new GoogleStrategy(
-		{
-			clientID: process.env.GOOGLE_CLIENT_ID,
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-			callbackURL: process.env.GOOGLE_REDIRECT_URL
-		},
-		function(token, refreshToken, profile, done) {
-			return done(null, {
-				profile: profile,
-				token: token
-			});
-		}
-	)
-);
 
-app.get("/auth/google", passport.authenticate("google", { scope: ["https://www.googleapis.com/auth/plus.login"] }));
+if (process.env.GOOGLE_CLIENT_ID) {
+	passport.use(
+		new GoogleStrategy(
+			{
+				clientID: process.env.GOOGLE_CLIENT_ID,
+				clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+				callbackURL: process.env.GOOGLE_REDIRECT_URL
+			},
+			function(token, refreshToken, profile, done) {
+				return done(null, {
+					profile: profile,
+					token: token
+				});
+			}
+		)
+	);
 
-// Support Google OAuth logon
-app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/" }), function(req, res) {
-	console.log("New login: " + req.user.profile.displayName + " " + req.user.profile.id);
+	app.get("/auth/google", passport.authenticate("google", { scope: ["https://www.googleapis.com/auth/plus.login"] }));
 
-	req.session.authorized = true;
-	res.redirect("/");
-});
+	// Support Google OAuth logon
+	app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/" }), function(req, res) {
+		console.log("New login: " + req.user.profile.displayName + " " + req.user.profile.id);
+
+		req.session.authorized = true;
+		res.redirect("/");
+	});
+}
 
 // Support password-based logon if APP_PASSWORD is set
 app.get("/login", (req, res, next) => {
