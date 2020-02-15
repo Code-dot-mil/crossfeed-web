@@ -12,7 +12,8 @@ let config = {
   database: process.env.PG_DATABASE,
   host: process.env.PG_HOST,
   dialect: "postgres",
-  logging: false
+  logging: false,
+  ssl: true
 };
 
 let sequelize = new Sequelize(config.database, config.username, config.password, config);
