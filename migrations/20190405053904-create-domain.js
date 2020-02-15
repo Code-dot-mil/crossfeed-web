@@ -17,6 +17,9 @@ module.exports = {
       ports: {
         type: Sequelize.STRING
       },
+      services: {
+        type: Sequelize.STRING
+      },
       screenshot: {
         type: Sequelize.STRING
       },

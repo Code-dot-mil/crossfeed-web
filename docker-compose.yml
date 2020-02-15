@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  crossfeed-web:
+    build: .
+    volumes:
+      - ./:/app
+    entrypoint: ["/bin/bash", "./start-server.sh", "${NODE_ENV}"]
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:latest
+    container_name: db
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DATABASE}
+
+volumes:
+  db-data:

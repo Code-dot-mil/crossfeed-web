@@ -1,0 +1,4 @@
+tmp/*
+.DS_STORE
+*/.DS_STORE
+client/dist/*
