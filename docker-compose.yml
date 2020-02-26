@@ -5,6 +5,7 @@ services:
     build: .
     volumes:
       - ./:/app
+      - /var/spool/cron/crontabs/:/var/spool/cron/crontabs/
     entrypoint: ["/bin/bash", "./start-server.sh", "${NODE_ENV}"]
     ports:
       - "3000:3000"
@@ -20,6 +21,12 @@ services:
       POSTGRES_USER: ${PG_USERNAME}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DATABASE}
+
+  sqs:
+    image: roribio16/alpine-sqs:latest
+    container_name: sqs
+    ports:
+      - "9329:9324"
 
 volumes:
   db-data:

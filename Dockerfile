@@ -2,6 +2,8 @@ FROM node:latest
 
 RUN npm install -g nodemon forever
 
+RUN apt-get update && apt-get -y install cron
+
 COPY . app
 
 WORKDIR /app
