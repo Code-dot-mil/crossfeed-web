@@ -22,11 +22,13 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DATABASE}
 
-  sqs:
-    image: roribio16/alpine-sqs:latest
-    container_name: sqs
+  localstack:
+    image: localstack/localstack
     ports:
-      - "9329:9324"
+      - "4567-4599:4567-4599"
+      - "4600:8080"
+    volumes:
+      - ./aws-dev:/docker-entrypoint-initaws.d
 
 volumes:
   db-data:
