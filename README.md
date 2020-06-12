@@ -17,7 +17,7 @@ Current features:
 
 Crossfeed Web (this repository) sits as the user-facing end of Crossfeed. This displays all information and allows scheduling scans.
 
-[Crossfeed Agent](https://github.com/deptofdefense/crossfeed-agent) is the backend scanner, which launches and coordinates scans.
+[Crossfeed Agent](https://github.com/Code-dot-mil/crossfeed-agent) is the backend scanner, which launches and coordinates scans.
 
 Scans are queued via Amazon SQS and dispatched by crossfeed agent. This is designed for a multi-host environment, where backend scanners process incoming scan requests asynchronously.
 
@@ -27,7 +27,7 @@ To get started, first copy relevent config files:
 
 1. Run `cp .env.example .env`
 2. Run `cp config/config.example.json config/config.json`
-3. In the [agent](https://github.com/deptofdefense/crossfeed-agent), run `cp config.example.json config.json`
+3. In the [agent](https://github.com/Code-dot-mil/crossfeed-agent), run `cp config.example.json config.json`
 
 ### Install and configure Docker
 
