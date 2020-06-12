@@ -8,7 +8,7 @@
         "angular-ui-router": "^1.0.22",
         "angularjs-toaster": "^3.0.0",
         "bootstrap": "^3.3.7",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "ng-table": "^3.0.1"
     }
 }
