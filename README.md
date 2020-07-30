@@ -1,3 +1,5 @@
+This repository has been archived. Please see https://github.com/deptofdefense/Crossfeed for the new, redesigned version of Crossfeed.
+
 # Crossfeed
 
 External monitoring for organization assets
